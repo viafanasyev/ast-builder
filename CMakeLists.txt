@@ -8,10 +8,15 @@ add_compile_options(-Wall -Wextra -pedantic -Werror -Wfloat-equal)
 
 add_executable(
         ast-builder
-        src/main.cpp)
+        src/main.cpp
+        src/tokenizer.h
+        src/tokenizer.cpp)
 
 add_executable(
         tests
         test/main.cpp
         test/testlib.h
-        test/testlib.cpp)
+        test/testlib.cpp
+        test/tokenizer_tests.cpp
+        src/tokenizer.h
+        src/tokenizer.cpp)
