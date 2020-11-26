@@ -101,11 +101,12 @@ class OperatorToken : public Token {
 private:
     const size_t arity;
     const size_t precedence;
+    const bool leftAssociative;
     const OperatorType operatorType;
 
 public:
-    OperatorToken(size_t arity_, size_t precedence_, OperatorType operatorType_) :
-        Token(OPERATOR), arity(arity_), precedence(precedence_), operatorType(operatorType_) { }
+    OperatorToken(size_t arity_, size_t precedence_, bool leftAssociative_, OperatorType operatorType_) :
+        Token(OPERATOR), arity(arity_), precedence(precedence_), leftAssociative(leftAssociative_), operatorType(operatorType_) { }
 
     size_t getArity() const {
         return arity;
@@ -119,6 +120,14 @@ public:
         return operatorType;
     }
 
+    bool isLeftAssociative() const {
+        return leftAssociative;
+    }
+
+    bool isRightAssociative() const {
+        return !leftAssociative;
+    }
+
     virtual const char* getSymbol() const = 0;
 
     void print() const override;
@@ -127,7 +136,7 @@ public:
 class AdditionOperator : public OperatorToken {
 
 public:
-    AdditionOperator() : OperatorToken(2, 1, ADDITION) { }
+    AdditionOperator() : OperatorToken(2, 1, true, ADDITION) { }
 
     const char* getSymbol() const override {
         return "+";
@@ -139,7 +148,7 @@ public:
 class SubtractionOperator : public OperatorToken {
 
 public:
-    SubtractionOperator() : OperatorToken(2, 1, SUBTRACTION) { }
+    SubtractionOperator() : OperatorToken(2, 1, true, SUBTRACTION) { }
 
     const char* getSymbol() const override {
         return "-";
@@ -151,7 +160,7 @@ public:
 class MultiplicationOperator : public OperatorToken {
 
 public:
-    MultiplicationOperator() : OperatorToken(2, 2, MULTIPLICATION) { }
+    MultiplicationOperator() : OperatorToken(2, 2, true, MULTIPLICATION) { }
 
     const char* getSymbol() const override {
         return "*";
@@ -163,7 +172,7 @@ public:
 class DivisionOperator : public OperatorToken {
 
 public:
-    DivisionOperator() : OperatorToken(2, 2, DIVISION) { }
+    DivisionOperator() : OperatorToken(2, 2, true, DIVISION) { }
 
     const char* getSymbol() const override {
         return "/";
@@ -175,7 +184,7 @@ public:
 class ArithmeticNegationOperator : public OperatorToken {
 
 public:
-    ArithmeticNegationOperator() : OperatorToken(1, 1000, ARITHMETIC_NEGATION) { }
+    ArithmeticNegationOperator() : OperatorToken(1, 1000, false, ARITHMETIC_NEGATION) { }
 
     const char* getSymbol() const override {
         return "-";
@@ -187,7 +196,7 @@ public:
 class UnaryAdditionOperator : public OperatorToken {
 
 public:
-    UnaryAdditionOperator() : OperatorToken(1, 1000, UNARY_ADDITION) { }
+    UnaryAdditionOperator() : OperatorToken(1, 1000, false, UNARY_ADDITION) { }
 
     const char* getSymbol() const override {
         return "+";

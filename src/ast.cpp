@@ -171,12 +171,8 @@ std::shared_ptr<ASTNode> buildAST(const std::vector<std::shared_ptr<Token> >& in
             int currentTokenPrecedence = currentToken->getPrecedence();
             while (!stack.empty() && stack.top()->getType() == TokenType::OPERATOR) {
                 int topTokenPrecedence = dynamic_cast<OperatorToken*>(stack.top().get())->getPrecedence();
-                if (topTokenPrecedence > currentTokenPrecedence ||
-                    (
-                        (topTokenPrecedence == currentTokenPrecedence) &&
-                        (currentToken->getOperatorType() != OperatorType::UNARY_ADDITION) && // UNARY_ADDITION and ARITHMETIC_NEGATION are right-associative
-                        (currentToken->getOperatorType() != OperatorType::ARITHMETIC_NEGATION)
-                    )
+                if ((topTokenPrecedence > currentTokenPrecedence) ||
+                   ((topTokenPrecedence == currentTokenPrecedence) && currentToken->isLeftAssociative())
                 ) {
                     connectWithOperands(astNodes, stack.top());
                     stack.pop();
