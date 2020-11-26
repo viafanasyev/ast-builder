@@ -12,7 +12,9 @@ add_executable(
         src/tokenizer.h
         src/tokenizer.cpp
         src/ast.h
-        src/ast.cpp)
+        src/ast.cpp
+        src/ast-optimizers.h
+        src/ast-optimizers.cpp)
 
 add_executable(
         tests

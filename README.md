@@ -6,6 +6,10 @@ This program is developed as a part of ISP RAS course.
 This program can build AST from mathematical expression of real numbers (even negative) with parentheses and simple operators (`+`, `-`, `*`, `/`) 
 and visualize it using graphviz. Also it can convert expressions into TeX/PDF format.
 
+AST can be optimized with `--optimized` option. Currently supported optimizations:
+* Unary plus operators removed;
+* Double negation operators removed.
+
 ![MISSING AST SAMPLE HERE](https://raw.githubusercontent.com/viafanasyev/ast-builder/master/samples/simple-expression.png)
 ![MISSING TEX SAMPLE HERE](https://raw.githubusercontent.com/viafanasyev/ast-builder/master/samples/simple-expression.pdf.png)
 
@@ -15,6 +19,7 @@ NOTE: This program runs only on UNIX-like OS. Also `dot` and `pdflatex` should b
 
 * src/ : Main project
     * ast.h, ast.cpp : Definition and implementation of AST node, AST building, visualization and TeX conversion functions
+    * ast-optimizers.h, ast-optimizers.cpp : Definition and implementation of AST optimizers
     * tokenizer.h, tokenizer.cpp : Definition and implementation of tokens and tokenizer functions
     * main.cpp : Entry point for the program.
 
@@ -37,6 +42,7 @@ To run main program execute next commands in terminal:
 ```shell script
 cmake . && make
 ./ast-builder "2 - 3 - (-4 * 5) / 2 + ----5"
+./ast-builder "2 - 3 - (-4 * 5) / 2 + ----5" --optimized
 ```
 
 #### Tests

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.17"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>AST Builder: src/main.cpp File Reference</title>
+<title>AST Builder: CompositeOptimizer Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -59,29 +59,30 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li>  </ul>
-</div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="class_composite_optimizer-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">main.cpp File Reference</div>  </div>
+<div class="title">CompositeOptimizer Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;cstring&gt;</code><br />
-<code>#include &lt;memory&gt;</code><br />
-<code>#include &quot;<a class="el" href="ast_8h_source.html">ast.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="ast-optimizers_8h_source.html">ast-optimizers.h</a>&quot;</code><br />
-</div><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:a0ddf1224851353fc92bfbff6f499fa97"><td class="memItemLeft" align="right" valign="top"><a id="a0ddf1224851353fc92bfbff6f499fa97"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>main</b> (int argc, char *argv[])</td></tr>
-<tr class="separator:a0ddf1224851353fc92bfbff6f499fa97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+
+<p>Inherits <a class="el" href="class_optimizer.html">Optimizer</a>.</p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a456e9807207ddf6d5383ab57eada3c2f"><td class="memItemLeft" align="right" valign="top"><a id="a456e9807207ddf6d5383ab57eada3c2f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addOptimizer</b> (const std::shared_ptr&lt; <a class="el" href="class_optimizer.html">Optimizer</a> &gt; &amp;optimizer)</td></tr>
+<tr class="separator:a456e9807207ddf6d5383ab57eada3c2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38ea93948ed9602e6bd6e39a8095faac"><td class="memItemLeft" align="right" valign="top"><a id="a38ea93948ed9602e6bd6e39a8095faac"></a>
+std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>optimize</b> (std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;node) const override</td></tr>
+<tr class="separator:a38ea93948ed9602e6bd6e39a8095faac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>src/<a class="el" href="ast-optimizers_8h_source.html">ast-optimizers.h</a></li>
+</ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['subtractionoperator_54',['SubtractionOperator',['../class_subtraction_operator.html',1,'']]]
+  ['subtractionoperator_63',['SubtractionOperator',['../class_subtraction_operator.html',1,'']]]
 ];

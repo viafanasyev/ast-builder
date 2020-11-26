@@ -69,6 +69,10 @@ $(function() {
 Project description</h1>
 <p>This program is developed as a part of ISP RAS course. <br  />
  This program can build AST from mathematical expression of real numbers (even negative) with parentheses and simple operators (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>) and visualize it using graphviz. Also it can convert expressions into TeX/PDF format.</p>
+<p>AST can be optimized with <code>--optimized</code> option. Currently supported optimizations:</p><ul>
+<li>Unary plus operators removed;</li>
+<li>Double negation operators removed.</li>
+</ul>
 <p><img src="https://raw.githubusercontent.com/viafanasyev/ast-builder/master/samples/simple-expression.png" alt="MISSING AST SAMPLE HERE" class="inline"/> <img src="https://raw.githubusercontent.com/viafanasyev/ast-builder/master/samples/simple-expression.pdf.png" alt="MISSING TEX SAMPLE HERE" class="inline"/></p>
 <p>NOTE: This program runs only on UNIX-like OS. Also <code>dot</code> and <code>pdflatex</code> should be installed.</p>
 <h2><a class="anchor" id="autotoc_md2"></a>
@@ -76,6 +80,7 @@ Structure</h2>
 <ul>
 <li>src/ : Main project<ul>
 <li><a class="el" href="ast_8h.html" title="Definition of AST node and AST building functions.">ast.h</a>, <a class="el" href="ast_8cpp.html" title="Implementation of AST building functions.">ast.cpp</a> : Definition and implementation of AST node, AST building, visualization and TeX conversion functions</li>
+<li><a class="el" href="ast-optimizers_8h.html" title="Definition of AST optimizers.">ast-optimizers.h</a>, <a class="el" href="ast-optimizers_8cpp.html" title="Implementation of AST optimizers.">ast-optimizers.cpp</a> : Definition and implementation of AST optimizers</li>
 <li><a class="el" href="tokenizer_8h.html" title="Definition of tokens that can be parsed and a tokenizer functions.">tokenizer.h</a>, <a class="el" href="tokenizer_8cpp.html" title="Implementation of tokenizer functions.">tokenizer.cpp</a> : Definition and implementation of tokens and tokenizer functions</li>
 <li>main.cpp : Entry point for the program.</li>
 </ul>
@@ -96,6 +101,7 @@ Run</h2>
 AST Builder</h3>
 <p>To run main program execute next commands in terminal: </p><div class="fragment"><div class="line">cmake . &amp;&amp; make</div>
 <div class="line">./ast-builder &quot;2 - 3 - (-4 * 5) / 2 + ----5&quot;</div>
+<div class="line">./ast-builder &quot;2 - 3 - (-4 * 5) / 2 + ----5&quot; --optimized</div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md5"></a>
 Tests</h3>
 <p>To run tests execute next commands in terminal: </p><div class="fragment"><div class="line">cmake . &amp;&amp; make</div>

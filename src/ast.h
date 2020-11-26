@@ -69,6 +69,18 @@ public:
         delete[] children;
     }
 
+    std::shared_ptr<ASTNode>* getChildren() const {
+        return children;
+    }
+
+    size_t getChildrenNumber() const {
+        return childrenNumber;
+    }
+
+    std::shared_ptr<Token> getToken() const {
+        return token;
+    }
+
     void print(int depth = 0) const;
 
     void visualize(const char* fileName) const;
