@@ -89,10 +89,17 @@ std::shared_ptr<ASTNode> buildAST(const std::vector<std::shared_ptr<Token> >& in
                 stack.pop();
             }
         } else if (token->getType() == TokenType::OPERATOR) {
-            int currentTokenPrecedence = dynamic_cast<OperatorToken*>(token.get())->getPrecedence();
+            auto currentToken = dynamic_cast<OperatorToken*>(token.get());
+            int currentTokenPrecedence = currentToken->getPrecedence();
             while (!stack.empty() && stack.top()->getType() == TokenType::OPERATOR) {
                 int topTokenPrecedence = dynamic_cast<OperatorToken*>(stack.top().get())->getPrecedence();
-                if (topTokenPrecedence >= currentTokenPrecedence) {
+                if (topTokenPrecedence > currentTokenPrecedence ||
+                    (
+                        (topTokenPrecedence == currentTokenPrecedence) &&
+                        (currentToken->getOperatorType() != OperatorType::UNARY_ADDITION) && // UNARY_ADDITION and ARITHMETIC_NEGATION are right-associative
+                        (currentToken->getOperatorType() != OperatorType::ARITHMETIC_NEGATION)
+                    )
+                ) {
                     connectWithOperands(astNodes, stack.top());
                     stack.pop();
                 } else {
@@ -124,8 +131,7 @@ static inline void connectWithOperands(std::stack<std::shared_ptr<ASTNode> >& as
 
     size_t parentNodeArity = dynamic_cast<OperatorToken*>(parentNodeToken.get())->getArity();
     if (astNodes.size() < parentNodeArity) {
-        throw std::invalid_argument(
-                "Too little operands"); // TODO: More verbose error context (put stack size and parentNode operatorType?)
+        throw std::invalid_argument("Too little operands"); // TODO: More verbose error context (put stack size and parentNode operatorType?)
     }
 
     if (parentNodeArity == 1) {
