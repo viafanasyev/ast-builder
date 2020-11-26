@@ -25,17 +25,30 @@ void ASTNode::print(int depth) const {
 
 void ASTNode::dotPrint(FILE* dotFile, int& nodeId) const {
     if (token->getType() == TokenType::CONSTANT_VALUE) {
-        fprintf(dotFile, "%d [label=\"%lg\"];\n", nodeId, dynamic_cast<ConstantValueToken*>(token.get())->getValue());
+        fprintf(dotFile, "%d [label=\"%lg\", shape=box, style=filled, color=\"grey\", fillcolor=\"#FFFEC9\"];\n", nodeId, dynamic_cast<ConstantValueToken*>(token.get())->getValue());
         ++nodeId;
     } else {
         auto operatorToken = dynamic_cast<OperatorToken*>(token.get());
-        fprintf(dotFile, "%d [label=\"%s\"];\n", nodeId, OperatorTypeStrings[operatorToken->getOperatorType()]);
+        fprintf(dotFile, "%d [label=\"%s\", shape=box, style=filled, color=\"grey\", fillcolor=\"#C9E7FF\"];\n", nodeId, OperatorTypeStrings[operatorToken->getOperatorType()]);
         int childrenNodeId = nodeId + 1;
         for (size_t i = 0; i < childrenNumber; ++i) {
             fprintf(dotFile, "%d->%d\n", nodeId, childrenNodeId);
             children[i]->dotPrint(dotFile, childrenNodeId);
         }
         nodeId = childrenNodeId;
+    }
+}
+
+double ASTNode::calculate() const {
+    switch (childrenNumber) {
+        case 0:
+            return token->calculate(0);
+        case 1:
+            return token->calculate(1, children[0]->calculate());
+        case 2:
+            return token->calculate(2, children[0]->calculate(), children[1]->calculate());
+        default:
+            throw std::logic_error("Unsupported arity of operator. Only unary and binary are supported yet");
     }
 }
 
@@ -48,6 +61,7 @@ void ASTNode::visualize(const char* dotFileName, const char* imageFileName) cons
     fprintf(graphvizTextFile, "digraph AST {\n");
     int nodeId = 0;
     dotPrint(graphvizTextFile, nodeId);
+    fprintf(graphvizTextFile, "\"= %lg\" [shape=box];\n", calculate());
     fprintf(graphvizTextFile, "}\n");
     fclose(graphvizTextFile);
 

@@ -74,6 +74,8 @@ public:
     void visualize(const char* dotFileName, const char* imageFileName) const;
 
     void dotPrint(FILE* dotFile, int& nodeId) const;
+
+    double calculate() const;
 };
 
 std::shared_ptr<ASTNode> buildAST(char* expression);

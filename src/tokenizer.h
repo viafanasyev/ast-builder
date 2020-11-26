@@ -36,6 +36,8 @@ public:
     }
 
     virtual void print() const;
+
+    virtual double calculate(size_t argc, ...) const = 0;
 };
 
 class ConstantValueToken : public Token {
@@ -51,6 +53,8 @@ public:
     }
 
     void print() const override;
+
+    double calculate(size_t argc, ...) const override;
 };
 
 class ParenthesisToken : public Token {
@@ -70,6 +74,8 @@ public:
     }
 
     void print() const override;
+
+    double calculate(size_t argc __attribute__((unused)), ...) const override;
 };
 
 enum OperatorType {
@@ -120,36 +126,48 @@ class AdditionOperator : public OperatorToken {
 
 public:
     AdditionOperator() : OperatorToken(2, 1, ADDITION) { }
+
+    double calculate(size_t argc, ...) const override;
 };
 
 class SubtractionOperator : public OperatorToken {
 
 public:
     SubtractionOperator() : OperatorToken(2, 1, SUBTRACTION) { }
+
+    double calculate(size_t argc, ...) const override;
 };
 
 class MultiplicationOperator : public OperatorToken {
 
 public:
     MultiplicationOperator() : OperatorToken(2, 2, MULTIPLICATION) { }
+
+    double calculate(size_t argc, ...) const override;
 };
 
 class DivisionOperator : public OperatorToken {
 
 public:
     DivisionOperator() : OperatorToken(2, 2, DIVISION) { }
+
+    double calculate(size_t argc, ...) const override;
 };
 
 class ArithmeticNegationOperator : public OperatorToken {
 
 public:
     ArithmeticNegationOperator() : OperatorToken(1, 1000, ARITHMETIC_NEGATION) { }
+
+    double calculate(size_t argc, ...) const override;
 };
 
 class UnaryAdditionOperator : public OperatorToken {
 
 public:
     UnaryAdditionOperator() : OperatorToken(1, 1000, UNARY_ADDITION) { }
+
+    double calculate(size_t argc, ...) const override;
 };
 
 /**

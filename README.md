@@ -33,7 +33,7 @@ and visualize it using graphviz.
 To run main program execute next commands in terminal:
 ```shell script
 cmake . && make
-./ast-builder "2 + 3 - (-4 * 5) / --5"
+./ast-builder "2 - 3 - (-4 * 5) + ----5"
 ```
 
 #### Tests

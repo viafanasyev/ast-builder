@@ -3,6 +3,7 @@
  * @brief Implementation of tokenizer functions
  */
 #include <cassert>
+#include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
 #include <stdexcept>
@@ -17,14 +18,81 @@ void ConstantValueToken::print() const {
     printf(" VALUE=%lf", value);
 }
 
+double ConstantValueToken::calculate(size_t argc, ...) const {
+    assert(argc == 0);
+    return value;
+}
+
 void ParenthesisToken::print() const {
     Token::print();
     printf(" %s", open ? "OPEN" : "CLOSE");
 }
 
+double ParenthesisToken::calculate(size_t argc __attribute__((unused)), ...) const {
+    throw std::logic_error("Parenthesis can't be calculated");
+}
+
 void OperatorToken::print() const {
     Token::print();
     printf(" ARITY=%zu, PRECEDENCE=%zu, TYPE=%s", arity, precedence, OperatorTypeStrings[operatorType]);
+}
+
+double AdditionOperator::calculate(size_t argc, ...) const {
+    assert(argc == 2);
+    va_list operands;
+    va_start(operands, argc);
+    double leftOperand = va_arg(operands, double);
+    double rightOperand = va_arg(operands, double);
+    va_end(operands);
+    return leftOperand + rightOperand;
+}
+
+double SubtractionOperator::calculate(size_t argc, ...) const {
+    assert(argc == 2);
+    va_list operands;
+    va_start(operands, argc);
+    double leftOperand = va_arg(operands, double);
+    double rightOperand = va_arg(operands, double);
+    va_end(operands);
+    return leftOperand - rightOperand;
+}
+
+double MultiplicationOperator::calculate(size_t argc, ...) const {
+    assert(argc == 2);
+    va_list operands;
+    va_start(operands, argc);
+    double leftOperand = va_arg(operands, double);
+    double rightOperand = va_arg(operands, double);
+    va_end(operands);
+    return leftOperand * rightOperand;
+}
+
+double DivisionOperator::calculate(size_t argc, ...) const {
+    assert(argc == 2);
+    va_list operands;
+    va_start(operands, argc);
+    double leftOperand = va_arg(operands, double);
+    double rightOperand = va_arg(operands, double);
+    va_end(operands);
+    return leftOperand / rightOperand;
+}
+
+double ArithmeticNegationOperator::calculate(size_t argc, ...) const {
+    assert(argc == 1);
+    va_list operands;
+    va_start(operands, argc);
+    double operand = va_arg(operands, double);
+    va_end(operands);
+    return -operand;
+}
+
+double UnaryAdditionOperator::calculate(size_t argc, ...) const {
+    assert(argc == 1);
+    va_list operands;
+    va_start(operands, argc);
+    double operand = va_arg(operands, double);
+    va_end(operands);
+    return operand;
 }
 
 static bool addNextToken(char*& expression, std::vector<std::shared_ptr<Token>>& tokens);
