@@ -10,7 +10,9 @@ add_executable(
         ast-builder
         src/main.cpp
         src/tokenizer.h
-        src/tokenizer.cpp)
+        src/tokenizer.cpp
+        src/ast.h
+        src/ast.cpp)
 
 add_executable(
         tests
@@ -19,4 +21,6 @@ add_executable(
         test/testlib.cpp
         test/tokenizer_tests.cpp
         src/tokenizer.h
-        src/tokenizer.cpp)
+        src/tokenizer.cpp
+        src/ast.h
+        src/ast.cpp)

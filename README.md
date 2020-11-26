@@ -7,6 +7,7 @@ This program is developed as a part of ISP RAS course.
 ### Structure
 
 * src/ : Main project
+    * ast.h, ast.cpp : Definition and implementation of AST node and AST building functions
     * tokenizer.h, tokenizer.cpp : Definition and implementation of tokens and tokenizer functions
     * main.cpp : Entry point for the program.
 
