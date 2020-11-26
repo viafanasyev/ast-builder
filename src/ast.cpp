@@ -80,7 +80,7 @@ void ASTNode::dotPrint(FILE* dotFile, int& nodeId) const {
         auto constantValueToken = dynamic_cast<ConstantValueToken*>(token.get());
         fprintf(dotFile, "%d [label=\"constant\nvalue: %lg\", shape=box, style=filled, color=\"grey\", fillcolor=\"#FFFEC9\"];\n", nodeId, constantValueToken->getValue());
         ++nodeId;
-    } else {
+    } else if (token->getType() == TokenType::OPERATOR) {
         auto operatorToken = dynamic_cast<OperatorToken*>(token.get());
         const char* operatorSymbol = operatorToken->getSymbol();
         if (operatorToken->getArity() == 1) {
@@ -96,6 +96,8 @@ void ASTNode::dotPrint(FILE* dotFile, int& nodeId) const {
             children[i]->dotPrint(dotFile, childrenNodeId);
         }
         nodeId = childrenNodeId;
+    } else {
+        throw std::logic_error("Unsupported token type");
     }
 }
 
@@ -103,7 +105,7 @@ void ASTNode::texPrint(FILE* texFile, bool braced) const {
     if (token->getType() == TokenType::CONSTANT_VALUE) {
         auto constantValueToken = dynamic_cast<ConstantValueToken*>(token.get());
         fprintf(texFile, "%lg", constantValueToken->getValue());
-    } else {
+    } else if (token->getType() == TokenType::OPERATOR) {
         auto operatorToken = dynamic_cast<OperatorToken*>(token.get());
         const char* operatorSymbol = operatorToken->getSymbol();
         if (operatorToken->getArity() == 1) {
@@ -134,6 +136,8 @@ void ASTNode::texPrint(FILE* texFile, bool braced) const {
                 if (braced) fprintf(texFile, ")");
             }
         }
+    } else {
+        throw std::logic_error("Unsupported token type");
     }
 }
 
