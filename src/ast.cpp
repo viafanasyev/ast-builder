@@ -23,6 +23,58 @@ void ASTNode::print(int depth) const {
     }
 }
 
+void ASTNode::visualize(const char* fileName) const {
+    assert(fileName != nullptr);
+
+    char dotFileName[1000];
+    strcpy(dotFileName, fileName);
+    strcat(dotFileName, ".dot");
+
+    FILE* graphvizTextFile = fopen(dotFileName, "w");
+    fprintf(graphvizTextFile, "digraph AST {\n");
+    int nodeId = 0;
+    dotPrint(graphvizTextFile, nodeId);
+    fprintf(graphvizTextFile, "\"= %lg\" [shape=box];\n", calculate());
+    fprintf(graphvizTextFile, "}\n");
+    fclose(graphvizTextFile);
+
+    char command[1000];
+    sprintf(command, "dot -Tpng -o%s.png %s.dot && xdg-open %s.png", fileName, fileName, fileName);
+    system(command);
+}
+
+void ASTNode::texify(const char* fileName) const {
+    assert(fileName != nullptr);
+
+    char texFileName[1000];
+    strcpy(texFileName, fileName);
+    strcat(texFileName, ".tex");
+
+    FILE* texFile = fopen(texFileName, "w");
+    fprintf(texFile, "\\documentclass{article}\n\\begin{document}\n\\begin{center}\n\t$ ");
+    texPrint(texFile);
+    fprintf(texFile, " = %lg $\n\\end{center}\n\\end{document}\n", calculate());
+    fclose(texFile);
+
+    char command[1000];
+    sprintf(command, "pdflatex %s.tex > .tmp_%s && rm .tmp_%s && rm %s.log && rm %s.aux && xdg-open %s.pdf",
+            fileName, fileName, fileName, fileName, fileName, fileName);
+    system(command);
+}
+
+double ASTNode::calculate() const {
+    switch (childrenNumber) {
+        case 0:
+            return token->calculate(0);
+        case 1:
+            return token->calculate(1, children[0]->calculate());
+        case 2:
+            return token->calculate(2, children[0]->calculate(), children[1]->calculate());
+        default:
+            throw std::logic_error("Unsupported arity of operator. Only unary and binary are supported yet");
+    }
+}
+
 void ASTNode::dotPrint(FILE* dotFile, int& nodeId) const {
     if (token->getType() == TokenType::CONSTANT_VALUE) {
         auto constantValueToken = dynamic_cast<ConstantValueToken*>(token.get());
@@ -47,38 +99,42 @@ void ASTNode::dotPrint(FILE* dotFile, int& nodeId) const {
     }
 }
 
-double ASTNode::calculate() const {
-    switch (childrenNumber) {
-        case 0:
-            return token->calculate(0);
-        case 1:
-            return token->calculate(1, children[0]->calculate());
-        case 2:
-            return token->calculate(2, children[0]->calculate(), children[1]->calculate());
-        default:
-            throw std::logic_error("Unsupported arity of operator. Only unary and binary are supported yet");
+void ASTNode::texPrint(FILE* texFile, bool braced) const {
+    if (token->getType() == TokenType::CONSTANT_VALUE) {
+        auto constantValueToken = dynamic_cast<ConstantValueToken*>(token.get());
+        fprintf(texFile, "%lg", constantValueToken->getValue());
+    } else {
+        auto operatorToken = dynamic_cast<OperatorToken*>(token.get());
+        const char* operatorSymbol = operatorToken->getSymbol();
+        if (operatorToken->getArity() == 1) {
+            fprintf(texFile, "%s", operatorSymbol);
+            children[0]->texPrint(texFile, true);
+        } else if (operatorToken->getArity() == 2) {
+            if (operatorToken->getOperatorType() == OperatorType::DIVISION) {
+                fprintf(texFile, "\\frac{");
+                children[0]->texPrint(texFile, false);
+                fprintf(texFile, "}{");
+                children[1]->texPrint(texFile, false);
+                fprintf(texFile, "}");
+            } else {
+                if (braced) fprintf(texFile, "(");
+                auto leftChild = children[0];
+                bool isLeftChildBraced =
+                        leftChild->token->getType() == TokenType::OPERATOR &&
+                        (dynamic_cast<OperatorToken*>(leftChild->token.get())->getPrecedence() < operatorToken->getPrecedence());
+                leftChild->texPrint(texFile, isLeftChildBraced);
+
+                fprintf(texFile, " %s ", operatorSymbol);
+
+                auto rightChild = children[1];
+                bool isRightChildBraced =
+                        rightChild->token->getType() == TokenType::OPERATOR &&
+                        (dynamic_cast<OperatorToken*>(rightChild->token.get())->getPrecedence() < operatorToken->getPrecedence());
+                rightChild->texPrint(texFile, isRightChildBraced);
+                if (braced) fprintf(texFile, ")");
+            }
+        }
     }
-}
-
-void ASTNode::visualize(const char* dotFileName, const char* imageFileName) const {
-    assert(dotFileName != nullptr);
-    assert(imageFileName != nullptr);
-    assert(dotFileName != imageFileName);
-
-    FILE* graphvizTextFile = fopen(dotFileName, "w");
-    fprintf(graphvizTextFile, "digraph AST {\n");
-    int nodeId = 0;
-    dotPrint(graphvizTextFile, nodeId);
-    fprintf(graphvizTextFile, "\"= %lg\" [shape=box];\n", calculate());
-    fprintf(graphvizTextFile, "}\n");
-    fclose(graphvizTextFile);
-
-    char dotCommand[1000];
-    sprintf(dotCommand, "dot -Tpng -O%s %s", imageFileName, dotFileName); // FIXME: .png file has is named '*.dot.png' somehow
-    system(dotCommand);
-    char xdgOpenCommand[1000];
-    sprintf(xdgOpenCommand, "xdg-open %s.png", dotFileName);
-    system(xdgOpenCommand);
 }
 
 static inline void connectWithOperands(std::stack<std::shared_ptr<ASTNode> >& astNodes, const std::shared_ptr<Token>& parentNodeToken);

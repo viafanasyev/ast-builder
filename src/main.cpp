@@ -10,11 +10,10 @@ int main(int argc, char* argv[]) {
         return -1;
     }
     try {
+        const char* fileName = "expression";
         std::shared_ptr<ASTNode> ASTRoot = buildAST(argv[1]);
-
-        const char* dotFileName = "graph.dot";
-        const char* imageFileName = "graph.png";
-        ASTRoot->visualize(dotFileName, imageFileName);
+        ASTRoot->visualize(fileName);
+        ASTRoot->texify(fileName);
     } catch (std::invalid_argument& ex) {
         fprintf(stderr, "Invalid expression: %s", ex.what());
     } catch (std::logic_error& ex) {

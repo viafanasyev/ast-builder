@@ -71,11 +71,14 @@ public:
 
     void print(int depth = 0) const;
 
-    void visualize(const char* dotFileName, const char* imageFileName) const;
-
-    void dotPrint(FILE* dotFile, int& nodeId) const;
+    void visualize(const char* fileName) const;
+    void texify(const char* fileName) const;
 
     double calculate() const;
+
+private:
+    void dotPrint(FILE* dotFile, int& nodeId) const;
+    void texPrint(FILE* texFile, bool braced = false) const;
 };
 
 std::shared_ptr<ASTNode> buildAST(char* expression);

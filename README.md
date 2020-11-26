@@ -4,14 +4,17 @@
 
 This program is developed as a part of ISP RAS course.  
 This program can build AST from mathematical expression of real numbers (even negative) with parentheses and simple operators (`+`, `-`, `*`, `/`) 
-and visualize it using graphviz.
+and visualize it using graphviz. Also it can convert expressions into TeX/PDF format.
 
-![MISSING AST SAMPLE HERE](https://raw.githubusercontent.com/viafanasyev/ast-builder/master/samples/simple-graph.png)
+![MISSING AST SAMPLE HERE](https://raw.githubusercontent.com/viafanasyev/ast-builder/master/samples/simple-expression.png)
+![MISSING TEX SAMPLE HERE](https://raw.githubusercontent.com/viafanasyev/ast-builder/master/samples/simple-expression.pdf.png)
+
+NOTE: This program runs only on UNIX-like OS. Also `dot` and `pdflatex` should be installed.
 
 ### Structure
 
 * src/ : Main project
-    * ast.h, ast.cpp : Definition and implementation of AST node, AST building and visualization functions
+    * ast.h, ast.cpp : Definition and implementation of AST node, AST building, visualization and TeX conversion functions
     * tokenizer.h, tokenizer.cpp : Definition and implementation of tokens and tokenizer functions
     * main.cpp : Entry point for the program.
 
@@ -20,7 +23,7 @@ and visualize it using graphviz.
     * tokenizer_tests.cpp : Tests for tokenizer functions
     * main.cpp : Entry point for tests. Just runs all tests.
 
-*samples/ : Samples of graphs
+* samples/ : Samples of graphs
 
 * doc/ : doxygen documentation
 
@@ -33,7 +36,7 @@ and visualize it using graphviz.
 To run main program execute next commands in terminal:
 ```shell script
 cmake . && make
-./ast-builder "2 - 3 - (-4 * 5) + ----5"
+./ast-builder "2 - 3 - (-4 * 5) / 2 + ----5"
 ```
 
 #### Tests

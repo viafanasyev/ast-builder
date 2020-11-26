@@ -139,18 +139,21 @@ $(function() {
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">void</span> print(<span class="keywordtype">int</span> depth = 0) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordtype">void</span> visualize(<span class="keyword">const</span> <span class="keywordtype">char</span>* dotFileName, <span class="keyword">const</span> <span class="keywordtype">char</span>* imageFileName) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordtype">void</span> dotPrint(FILE* dotFile, <span class="keywordtype">int</span>&amp; nodeId) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordtype">double</span> calculate() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;};</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;std::shared_ptr&lt;ASTNode&gt; buildAST(<span class="keywordtype">char</span>* expression);</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;std::shared_ptr&lt;ASTNode&gt; buildAST(<span class="keyword">const</span> std::vector&lt;std::shared_ptr&lt;Token&gt; &gt;&amp; infixNotationTokens);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="preprocessor">#endif // AST_BUILDER_AST_H</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordtype">void</span> visualize(<span class="keyword">const</span> <span class="keywordtype">char</span>* fileName) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordtype">void</span> texify(<span class="keyword">const</span> <span class="keywordtype">char</span>* fileName) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordtype">double</span> calculate() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordtype">void</span> dotPrint(FILE* dotFile, <span class="keywordtype">int</span>&amp; nodeId) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordtype">void</span> texPrint(FILE* texFile, <span class="keywordtype">bool</span> braced = <span class="keyword">false</span>) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;};</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;std::shared_ptr&lt;ASTNode&gt; buildAST(<span class="keywordtype">char</span>* expression);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;std::shared_ptr&lt;ASTNode&gt; buildAST(<span class="keyword">const</span> std::vector&lt;std::shared_ptr&lt;Token&gt; &gt;&amp; infixNotationTokens);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor">#endif // AST_BUILDER_AST_H</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="atokenizer_8h_html"><div class="ttname"><a href="tokenizer_8h.html">tokenizer.h</a></div><div class="ttdoc">Definition of tokens that can be parsed and a tokenizer functions.</div></div>
 <div class="ttc" id="aclass_a_s_t_node_html"><div class="ttname"><a href="class_a_s_t_node.html">ASTNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:13</div></div>
