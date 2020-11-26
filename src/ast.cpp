@@ -25,11 +25,19 @@ void ASTNode::print(int depth) const {
 
 void ASTNode::dotPrint(FILE* dotFile, int& nodeId) const {
     if (token->getType() == TokenType::CONSTANT_VALUE) {
-        fprintf(dotFile, "%d [label=\"%lg\", shape=box, style=filled, color=\"grey\", fillcolor=\"#FFFEC9\"];\n", nodeId, dynamic_cast<ConstantValueToken*>(token.get())->getValue());
+        auto constantValueToken = dynamic_cast<ConstantValueToken*>(token.get());
+        fprintf(dotFile, "%d [label=\"constant\nvalue: %lg\", shape=box, style=filled, color=\"grey\", fillcolor=\"#FFFEC9\"];\n", nodeId, constantValueToken->getValue());
         ++nodeId;
     } else {
         auto operatorToken = dynamic_cast<OperatorToken*>(token.get());
-        fprintf(dotFile, "%d [label=\"%s\", shape=box, style=filled, color=\"grey\", fillcolor=\"#C9E7FF\"];\n", nodeId, OperatorTypeStrings[operatorToken->getOperatorType()]);
+        const char* operatorSymbol = operatorToken->getSymbol();
+        if (operatorToken->getArity() == 1) {
+            fprintf(dotFile, "%d [label=\"unary op\nop: %s\", shape=box, style=filled, color=\"grey\", fillcolor=\"#C9E7FF\"];\n",
+                    nodeId, operatorSymbol);
+        } else if (operatorToken->getArity() == 2) {
+            fprintf(dotFile, "%d [label=\"binary op\nop: %s\", shape=box, style=filled, color=\"grey\", fillcolor=\"#C9E7FF\"];\n",
+                    nodeId, operatorSymbol);
+        }
         int childrenNodeId = nodeId + 1;
         for (size_t i = 0; i < childrenNumber; ++i) {
             fprintf(dotFile, "%d->%d\n", nodeId, childrenNodeId);

@@ -1,30 +1,44 @@
 digraph AST {
-0 [label="ADDITION", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+0 [label="binary op
+op: +", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
 0->1
-1 [label="SUBTRACTION", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+1 [label="binary op
+op: -", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
 1->2
-2 [label="SUBTRACTION", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+2 [label="binary op
+op: -", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
 2->3
-3 [label="2", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+3 [label="constant
+value: 2", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
 2->4
-4 [label="3", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+4 [label="constant
+value: 3", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
 1->5
-5 [label="MULTIPLICATION", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+5 [label="binary op
+op: *", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
 5->6
-6 [label="ARITHMETIC_NEGATION", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+6 [label="unary op
+op: -", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
 6->7
-7 [label="4", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+7 [label="constant
+value: 4", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
 5->8
-8 [label="5", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+8 [label="constant
+value: 5", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
 0->9
-9 [label="ARITHMETIC_NEGATION", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+9 [label="unary op
+op: -", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
 9->10
-10 [label="ARITHMETIC_NEGATION", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+10 [label="unary op
+op: -", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
 10->11
-11 [label="ARITHMETIC_NEGATION", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+11 [label="unary op
+op: -", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
 11->12
-12 [label="ARITHMETIC_NEGATION", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+12 [label="unary op
+op: -", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
 12->13
-13 [label="5", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+13 [label="constant
+value: 5", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
 "= 24" [shape=box];
 }

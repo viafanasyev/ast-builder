@@ -119,6 +119,8 @@ public:
         return operatorType;
     }
 
+    virtual const char* getSymbol() const = 0;
+
     void print() const override;
 };
 
@@ -126,6 +128,10 @@ class AdditionOperator : public OperatorToken {
 
 public:
     AdditionOperator() : OperatorToken(2, 1, ADDITION) { }
+
+    const char* getSymbol() const override {
+        return "+";
+    }
 
     double calculate(size_t argc, ...) const override;
 };
@@ -135,6 +141,10 @@ class SubtractionOperator : public OperatorToken {
 public:
     SubtractionOperator() : OperatorToken(2, 1, SUBTRACTION) { }
 
+    const char* getSymbol() const override {
+        return "-";
+    }
+
     double calculate(size_t argc, ...) const override;
 };
 
@@ -142,6 +152,10 @@ class MultiplicationOperator : public OperatorToken {
 
 public:
     MultiplicationOperator() : OperatorToken(2, 2, MULTIPLICATION) { }
+
+    const char* getSymbol() const override {
+        return "*";
+    }
 
     double calculate(size_t argc, ...) const override;
 };
@@ -151,6 +165,10 @@ class DivisionOperator : public OperatorToken {
 public:
     DivisionOperator() : OperatorToken(2, 2, DIVISION) { }
 
+    const char* getSymbol() const override {
+        return "/";
+    }
+
     double calculate(size_t argc, ...) const override;
 };
 
@@ -159,6 +177,10 @@ class ArithmeticNegationOperator : public OperatorToken {
 public:
     ArithmeticNegationOperator() : OperatorToken(1, 1000, ARITHMETIC_NEGATION) { }
 
+    const char* getSymbol() const override {
+        return "-";
+    }
+
     double calculate(size_t argc, ...) const override;
 };
 
@@ -166,6 +188,10 @@ class UnaryAdditionOperator : public OperatorToken {
 
 public:
     UnaryAdditionOperator() : OperatorToken(1, 1000, UNARY_ADDITION) { }
+
+    const char* getSymbol() const override {
+        return "+";
+    }
 
     double calculate(size_t argc, ...) const override;
 };

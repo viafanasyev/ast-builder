@@ -6,7 +6,7 @@ This program is developed as a part of ISP RAS course.
 This program can build AST from mathematical expression of real numbers (even negative) with parentheses and simple operators (`+`, `-`, `*`, `/`) 
 and visualize it using graphviz.
 
-![MISSING AST SAMPLE HERE](samples/simple-graph.png)
+![MISSING AST SAMPLE HERE](https://raw.githubusercontent.com/viafanasyev/ast-builder/master/samples/simple-graph.png)
 
 ### Structure
 
