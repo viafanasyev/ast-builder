@@ -11,8 +11,12 @@ int main(int argc, char* argv[]) {
         fprintf(stderr, "Invalid arguments number (argc = %d)", argc);
         return -1;
     }
+    if ((argc == 3) && (strcmp(argv[2], "--optimized") != 0)) {
+        fprintf(stderr, "Invalid option '%s'. Only '--optimized' is supported", argv[2]);
+        return -1;
+    }
 
-    bool optimized = (argc == 3) && (strcmp(argv[2], "--optimized") == 0);
+    bool optimized = (argc == 3);
     try {
         std::shared_ptr<ASTNode> ASTRoot = buildAST(argv[1]);
 
