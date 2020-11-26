@@ -68,11 +68,13 @@ $(function() {
 <div class="textblock"><h1><a class="anchor" id="autotoc_md1"></a>
 Project description</h1>
 <p>This program is developed as a part of ISP RAS course. <br  />
-</p>
+ This program can build AST from mathematical expression of real numbers (even negative) with parentheses and simple operators (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>) and visualize it using graphviz.</p>
+<p><img src="samples/simple-graph.png" alt="MISSING AST SAMPLE HERE" class="inline"/></p>
 <h2><a class="anchor" id="autotoc_md2"></a>
 Structure</h2>
 <ul>
 <li>src/ : Main project<ul>
+<li><a class="el" href="ast_8h.html" title="Definition of AST node and AST building functions.">ast.h</a>, <a class="el" href="ast_8cpp.html" title="Implementation of AST building functions.">ast.cpp</a> : Definition and implementation of AST node, AST building and visualization functions</li>
 <li><a class="el" href="tokenizer_8h.html" title="Definition of tokens that can be parsed and a tokenizer functions.">tokenizer.h</a>, <a class="el" href="tokenizer_8cpp.html" title="Implementation of tokenizer functions.">tokenizer.cpp</a> : Definition and implementation of tokens and tokenizer functions</li>
 <li>main.cpp : Entry point for the program.</li>
 </ul>
@@ -83,6 +85,9 @@ Structure</h2>
 <li>main.cpp : Entry point for tests. Just runs all tests.</li>
 </ul>
 </li>
+</ul>
+<p>*samples/ : Samples of graphs</p>
+<ul>
 <li>doc/ : doxygen documentation</li>
 <li>Doxyfile : doxygen config file</li>
 </ul>
@@ -91,7 +96,7 @@ Run</h2>
 <h3><a class="anchor" id="autotoc_md4"></a>
 AST Builder</h3>
 <p>To run main program execute next commands in terminal: </p><div class="fragment"><div class="line">cmake . &amp;&amp; make</div>
-<div class="line">./ast-builder</div>
+<div class="line">./ast-builder &quot;2 + 3 - (-4 * 5) / --5&quot;</div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md5"></a>
 Tests</h3>
 <p>To run tests execute next commands in terminal: </p><div class="fragment"><div class="line">cmake . &amp;&amp; make</div>

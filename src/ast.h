@@ -70,6 +70,10 @@ public:
     }
 
     void print(int depth = 0) const;
+
+    void visualize(const char* dotFileName, const char* imageFileName) const;
+
+    void dotPrint(FILE* dotFile, int& nodeId) const;
 };
 
 std::shared_ptr<ASTNode> buildAST(char* expression);

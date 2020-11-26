@@ -3,6 +3,8 @@
  * @brief Implementation of AST building functions
  */
 #include <cassert>
+#include <cstdio>
+#include <cstring>
 #include <stack>
 #include <stdexcept>
 #include <vector>
@@ -19,6 +21,42 @@ void ASTNode::print(int depth) const {
     for (size_t i = 0; i < childrenNumber; ++i) {
         children[i]->print(depth + 1);
     }
+}
+
+void ASTNode::dotPrint(FILE* dotFile, int& nodeId) const {
+    if (token->getType() == TokenType::CONSTANT_VALUE) {
+        fprintf(dotFile, "%d [label=\"%lg\"];\n", nodeId, dynamic_cast<ConstantValueToken*>(token.get())->getValue());
+        ++nodeId;
+    } else {
+        auto operatorToken = dynamic_cast<OperatorToken*>(token.get());
+        fprintf(dotFile, "%d [label=\"%s\"];\n", nodeId, OperatorTypeStrings[operatorToken->getOperatorType()]);
+        int childrenNodeId = nodeId + 1;
+        for (size_t i = 0; i < childrenNumber; ++i) {
+            fprintf(dotFile, "%d->%d\n", nodeId, childrenNodeId);
+            children[i]->dotPrint(dotFile, childrenNodeId);
+        }
+        nodeId = childrenNodeId;
+    }
+}
+
+void ASTNode::visualize(const char* dotFileName, const char* imageFileName) const {
+    assert(dotFileName != nullptr);
+    assert(imageFileName != nullptr);
+    assert(dotFileName != imageFileName);
+
+    FILE* graphvizTextFile = fopen(dotFileName, "w");
+    fprintf(graphvizTextFile, "digraph AST {\n");
+    int nodeId = 0;
+    dotPrint(graphvizTextFile, nodeId);
+    fprintf(graphvizTextFile, "}\n");
+    fclose(graphvizTextFile);
+
+    char dotCommand[1000];
+    sprintf(dotCommand, "dot -Tpng -O%s %s", imageFileName, dotFileName); // FIXME: .png file has is named '*.dot.png' somehow
+    system(dotCommand);
+    char xdgOpenCommand[1000];
+    sprintf(xdgOpenCommand, "xdg-open %s.png", dotFileName);
+    system(xdgOpenCommand);
 }
 
 static inline void connectWithOperands(std::stack<std::shared_ptr<ASTNode> >& astNodes, const std::shared_ptr<Token>& parentNodeToken);

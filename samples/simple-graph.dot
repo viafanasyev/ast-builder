@@ -1,0 +1,25 @@
+digraph AST {
+0 [label="ADDITION"];
+0->1
+1 [label="ARITHMETIC_NEGATION"];
+1->2
+2 [label="SUBTRACTION"];
+2->3
+3 [label="SUBTRACTION"];
+3->4
+4 [label="2"];
+3->5
+5 [label="3"];
+2->6
+6 [label="MULTIPLICATION"];
+6->7
+7 [label="ARITHMETIC_NEGATION"];
+7->8
+8 [label="4"];
+6->9
+9 [label="5"];
+0->10
+10 [label="ARITHMETIC_NEGATION"];
+10->11
+11 [label="5"];
+}

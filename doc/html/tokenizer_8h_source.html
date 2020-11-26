@@ -161,19 +161,19 @@ $(function() {
 <div class="line"><a name="l00093"></a><span class="lineno"><a class="line" href="class_operator_token.html">   93</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_operator_token.html">OperatorToken</a> : <span class="keyword">public</span> <a class="code" href="class_token.html">Token</a> {</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> arity;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> precedence;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">size_t</span> arity;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">size_t</span> precedence;</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keyword">const</span> OperatorType operatorType;</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <a class="code" href="class_operator_token.html">OperatorToken</a>(<span class="keywordtype">int</span> arity_, <span class="keywordtype">int</span> precedence_, OperatorType operatorType_) :</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <a class="code" href="class_operator_token.html">OperatorToken</a>(<span class="keywordtype">size_t</span> arity_, <span class="keywordtype">size_t</span> precedence_, OperatorType operatorType_) :</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <a class="code" href="class_token.html">Token</a>(OPERATOR), arity(arity_), precedence(precedence_), operatorType(operatorType_) { }</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordtype">int</span> getArity()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordtype">size_t</span> getArity()<span class="keyword"> const </span>{</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        <span class="keywordflow">return</span> arity;</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    }</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordtype">int</span> getPrecedence()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordtype">size_t</span> getPrecedence()<span class="keyword"> const </span>{</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="keywordflow">return</span> precedence;</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    }</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
@@ -220,7 +220,7 @@ $(function() {
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <a class="code" href="class_unary_addition_operator.html">UnaryAdditionOperator</a>() : <a class="code" href="class_operator_token.html">OperatorToken</a>(1, 1000, UNARY_ADDITION) { }</div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;};</div>
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160; </div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;std::vector&lt;std::unique_ptr&lt;Token&gt;&gt; <a class="code" href="tokenizer_8h.html#a59121aee534bec4674d9535ce303f0fd">tokenize</a>(<span class="keywordtype">char</span>* expression);</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;std::vector&lt;std::shared_ptr&lt;Token&gt;&gt; <a class="code" href="tokenizer_8h.html#aa44bc325151c00cf105f6c5e09feb7b3">tokenize</a>(<span class="keywordtype">char</span>* expression);</div>
 <div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
 <div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;<span class="preprocessor">#endif // AST_BUILDER_TOKENIZER_H</span></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -228,9 +228,9 @@ $(function() {
 <div class="ttc" id="aclass_token_html"><div class="ttname"><a href="class_token.html">Token</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:25</div></div>
 <div class="ttc" id="aclass_unary_addition_operator_html"><div class="ttname"><a href="class_unary_addition_operator.html">UnaryAdditionOperator</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:149</div></div>
 <div class="ttc" id="aclass_addition_operator_html"><div class="ttname"><a href="class_addition_operator.html">AdditionOperator</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:119</div></div>
+<div class="ttc" id="atokenizer_8h_html_aa44bc325151c00cf105f6c5e09feb7b3"><div class="ttname"><a href="tokenizer_8h.html#aa44bc325151c00cf105f6c5e09feb7b3">tokenize</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; Token &gt; &gt; tokenize(char *expression)</div><div class="ttdef"><b>Definition:</b> tokenizer.cpp:38</div></div>
 <div class="ttc" id="aclass_division_operator_html"><div class="ttname"><a href="class_division_operator.html">DivisionOperator</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:137</div></div>
 <div class="ttc" id="aclass_parenthesis_token_html"><div class="ttname"><a href="class_parenthesis_token.html">ParenthesisToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:56</div></div>
-<div class="ttc" id="atokenizer_8h_html_a59121aee534bec4674d9535ce303f0fd"><div class="ttname"><a href="tokenizer_8h.html#a59121aee534bec4674d9535ce303f0fd">tokenize</a></div><div class="ttdeci">std::vector&lt; std::unique_ptr&lt; Token &gt; &gt; tokenize(char *expression)</div><div class="ttdef"><b>Definition:</b> tokenizer.cpp:38</div></div>
 <div class="ttc" id="aclass_arithmetic_negation_operator_html"><div class="ttname"><a href="class_arithmetic_negation_operator.html">ArithmeticNegationOperator</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:143</div></div>
 <div class="ttc" id="aclass_constant_value_token_html"><div class="ttname"><a href="class_constant_value_token.html">ConstantValueToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:41</div></div>
 <div class="ttc" id="aclass_operator_token_html"><div class="ttname"><a href="class_operator_token.html">OperatorToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:93</div></div>
