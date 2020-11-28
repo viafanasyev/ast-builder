@@ -101,6 +101,8 @@ void ASTNode::dotPrint(FILE* dotFile, int& nodeId) const {
     }
 }
 
+static inline bool shouldBeBraced(const OperatorToken* parentOperator, const Token* child, bool isRightChild);
+
 void ASTNode::texPrint(FILE* texFile, bool braced) const {
     if (token->getType() == TokenType::CONSTANT_VALUE) {
         auto constantValueToken = dynamic_cast<ConstantValueToken*>(token.get());
@@ -121,17 +123,13 @@ void ASTNode::texPrint(FILE* texFile, bool braced) const {
             } else {
                 if (braced) fprintf(texFile, "(");
                 auto leftChild = children[0];
-                bool isLeftChildBraced =
-                        leftChild->token->getType() == TokenType::OPERATOR &&
-                        (dynamic_cast<OperatorToken*>(leftChild->token.get())->getPrecedence() < operatorToken->getPrecedence());
+                bool isLeftChildBraced = shouldBeBraced(operatorToken, leftChild->getToken().get(), false);
                 leftChild->texPrint(texFile, isLeftChildBraced);
 
                 fprintf(texFile, " %s ", operatorSymbol);
 
                 auto rightChild = children[1];
-                bool isRightChildBraced =
-                        rightChild->token->getType() == TokenType::OPERATOR &&
-                        (dynamic_cast<OperatorToken*>(rightChild->token.get())->getPrecedence() < operatorToken->getPrecedence());
+                bool isRightChildBraced = shouldBeBraced(operatorToken, rightChild->getToken().get(), true);
                 rightChild->texPrint(texFile, isRightChildBraced);
                 if (braced) fprintf(texFile, ")");
             }
@@ -139,6 +137,20 @@ void ASTNode::texPrint(FILE* texFile, bool braced) const {
     } else {
         throw std::logic_error("Unsupported token type");
     }
+}
+
+static inline bool shouldBeBraced(const OperatorToken* parentOperator, const Token* child, bool isRightChild) {
+    if (child->getType() != TokenType::OPERATOR)
+        return false;
+
+    if (dynamic_cast<const OperatorToken*>(child)->getPrecedence() < parentOperator->getPrecedence())
+        return true;
+
+    if (isRightChild && (parentOperator->getOperatorType() == OperatorType::SUBTRACTION) &&
+        (dynamic_cast<const OperatorToken*>(child)->getPrecedence() == parentOperator->getPrecedence()))
+        return true;
+
+    return false;
 }
 
 static inline void connectWithOperands(std::stack<std::shared_ptr<ASTNode> >& astNodes, const std::shared_ptr<Token>& parentNodeToken);
