@@ -19,9 +19,9 @@
 #define ASSERT_PARENTHESIS_TOKEN(token, open) do {                                                                     \
     ASSERT_NOT_NULL(token);                                                                                            \
     ASSERT_EQUALS(token->getType(), PARENTHESIS);                                                                      \
-    auto operatorToken = dynamic_cast<ParenthesisToken*>(token.get());                                                 \
-    ASSERT_NOT_NULL(operatorToken);                                                                                    \
-    ASSERT_EQUALS(operatorToken->isOpen(), open);                                                                      \
+    auto parenthesisToken = dynamic_cast<ParenthesisToken*>(token.get());                                              \
+    ASSERT_NOT_NULL(parenthesisToken);                                                                                 \
+    ASSERT_EQUALS(parenthesisToken->isOpen(), open);                                                                   \
 } while(0)
 
 #define ASSERT_OPERATOR_TOKEN(token, arity, precedence, operatorType) do {                                             \
@@ -33,6 +33,14 @@
     ASSERT_EQUALS(operatorToken->getPrecedence(), precedence);                                                         \
     ASSERT_EQUALS(operatorToken->getOperatorType(), operatorType);                                                     \
 } while (0)
+
+#define ASSERT_VARIABLE_TOKEN(token, name) do {                                                                        \
+    ASSERT_NOT_NULL(token);                                                                                            \
+    ASSERT_EQUALS(token->getType(), VARIABLE);                                                                         \
+    auto variableToken = dynamic_cast<VariableToken*>(token.get());                                                    \
+    ASSERT_NOT_NULL(variableToken);                                                                                    \
+    ASSERT_TRUE(strcmp(variableToken->getName(), name) == 0);                                                          \
+} while(0)
 
 TEST(tokenize, simpleExpression) {
     char* expression = (char*)"1*(2+3)";
@@ -121,12 +129,12 @@ TEST(tokenize, realConstantInExponentionalForm) {
 }
 
 TEST(tokenize, invalidToken) {
-    char* expression = (char*)"1/x";
+    char* expression = (char*)"1/_";
     try {
         tokenize(expression);
         ASSERT_TRUE(false);
     } catch (std::invalid_argument& ex) {
-        ASSERT_TRUE(strcmp(ex.what(), "Invalid symbol found: 'x'") == 0);
+        ASSERT_TRUE(strcmp(ex.what(), "Invalid symbol found: '_'") == 0);
     }
 }
 
@@ -138,4 +146,19 @@ TEST(tokenize, invalidConstant) {
     } catch (std::invalid_argument& ex) {
         ASSERT_TRUE(strcmp(ex.what(), "Invalid symbol found: '.'") == 0);
     }
+}
+
+TEST(tokenize, simpleExpressionWithVariables) {
+    char* expression = (char*)"x+5*const-tmp";
+
+    std::vector<std::shared_ptr<Token>> tokens = tokenize(expression);
+
+    ASSERT_EQUALS(tokens.size(), 7);
+    ASSERT_VARIABLE_TOKEN(tokens[0], "x");
+    ASSERT_OPERATOR_TOKEN(tokens[1], 2, 1, ADDITION);
+    ASSERT_CONSTANT_VALUE_TOKEN(tokens[2], 5);
+    ASSERT_OPERATOR_TOKEN(tokens[3], 2, 2, MULTIPLICATION);
+    ASSERT_VARIABLE_TOKEN(tokens[4], "const");
+    ASSERT_OPERATOR_TOKEN(tokens[5], 2, 1, SUBTRACTION);
+    ASSERT_VARIABLE_TOKEN(tokens[6], "tmp");
 }

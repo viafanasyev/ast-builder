@@ -26,7 +26,7 @@ void ASTNode::print(int depth) const {
 void ASTNode::visualize(const char* fileName) const {
     assert(fileName != nullptr);
 
-    char dotFileName[1000];
+    char dotFileName[100];
     strcpy(dotFileName, fileName);
     strcat(dotFileName, ".dot");
 
@@ -34,7 +34,6 @@ void ASTNode::visualize(const char* fileName) const {
     fprintf(graphvizTextFile, "digraph AST {\n");
     int nodeId = 0;
     dotPrint(graphvizTextFile, nodeId);
-    fprintf(graphvizTextFile, "\"= %lg\" [shape=box];\n", calculate());
     fprintf(graphvizTextFile, "}\n");
     fclose(graphvizTextFile);
 
@@ -46,14 +45,14 @@ void ASTNode::visualize(const char* fileName) const {
 void ASTNode::texify(const char* fileName) const {
     assert(fileName != nullptr);
 
-    char texFileName[1000];
+    char texFileName[100];
     strcpy(texFileName, fileName);
     strcat(texFileName, ".tex");
 
     FILE* texFile = fopen(texFileName, "w");
     fprintf(texFile, "\\documentclass{article}\n\\begin{document}\n\\begin{center}\n\t$ ");
     texPrint(texFile);
-    fprintf(texFile, " = %lg $\n\\end{center}\n\\end{document}\n", calculate());
+    fprintf(texFile, "$\n\\end{center}\n\\end{document}\n");
     fclose(texFile);
 
     char command[1000];
@@ -78,7 +77,11 @@ double ASTNode::calculate() const {
 void ASTNode::dotPrint(FILE* dotFile, int& nodeId) const {
     if (token->getType() == TokenType::CONSTANT_VALUE) {
         auto constantValueToken = dynamic_cast<ConstantValueToken*>(token.get());
-        fprintf(dotFile, "%d [label=\"constant\nvalue: %lg\", shape=box, style=filled, color=\"grey\", fillcolor=\"#FFFEC9\"];\n", nodeId, constantValueToken->getValue());
+        fprintf(dotFile, "%d [label=\"const\nvalue: %lg\", shape=box, style=filled, color=\"grey\", fillcolor=\"#FFFEC9\"];\n", nodeId, constantValueToken->getValue());
+        ++nodeId;
+    } else if (token->getType() == TokenType::VARIABLE) {
+        auto variableToken = dynamic_cast<VariableToken*>(token.get());
+        fprintf(dotFile, "%d [label=\"var\nname: %s\", shape=box, style=filled, color=\"grey\", fillcolor=\"#99FF9D\"];\n", nodeId, variableToken->getName());
         ++nodeId;
     } else if (token->getType() == TokenType::OPERATOR) {
         auto operatorToken = dynamic_cast<OperatorToken*>(token.get());
@@ -107,6 +110,9 @@ void ASTNode::texPrint(FILE* texFile, bool braced) const {
     if (token->getType() == TokenType::CONSTANT_VALUE) {
         auto constantValueToken = dynamic_cast<ConstantValueToken*>(token.get());
         fprintf(texFile, "%lg", constantValueToken->getValue());
+    } else if (token->getType() == TokenType::VARIABLE) {
+        auto variableToken = dynamic_cast<VariableToken*>(token.get());
+        fprintf(texFile, "%s", variableToken->getName());
     } else if (token->getType() == TokenType::OPERATOR) {
         auto operatorToken = dynamic_cast<OperatorToken*>(token.get());
         const char* operatorSymbol = operatorToken->getSymbol();
@@ -164,7 +170,7 @@ std::shared_ptr<ASTNode> buildAST(const std::vector<std::shared_ptr<Token> >& in
     std::stack<std::shared_ptr<ASTNode> > astNodes;
 
     for (auto& token : infixNotationTokens) {
-        if (token->getType() == TokenType::CONSTANT_VALUE) {
+        if ((token->getType() == TokenType::CONSTANT_VALUE) || (token->getType() == TokenType::VARIABLE)) {
             astNodes.push(std::make_shared<ASTNode>(token));
         } else if (token->getType() == TokenType::PARENTHESIS) {
             auto parenthesisToken = dynamic_cast<ParenthesisToken*>(token.get());

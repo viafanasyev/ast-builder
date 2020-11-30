@@ -7,6 +7,8 @@
 
 #include <cctype>
 #include <climits>
+#include <cstring>
+#include <map>
 #include <memory>
 #include <vector>
 
@@ -14,12 +16,14 @@ enum TokenType {
     CONSTANT_VALUE,
     PARENTHESIS,
     OPERATOR,
+    VARIABLE,
 };
 
 static const char* const TokenTypeStrings[] = {
     "CONSTANT_VALUE",
     "PARENTHESIS",
     "OPERATOR",
+    "VARIABLE",
 };
 
 class Token {
@@ -203,6 +207,44 @@ public:
     }
 
     double calculate(size_t argc, ...) const override;
+};
+
+class VariableToken : public Token {
+
+private:
+    struct keyCompare {
+        bool operator()(char* a, char* b) const {
+            return strcmp(a, b) < 0;
+        }
+    };
+
+    static std::map<char*, std::shared_ptr<VariableToken>, keyCompare> symbolTable;
+    char* name;
+
+    explicit VariableToken(const char* name_) : Token(VARIABLE) {
+        name = (char*)calloc(MAX_NAME_LENGTH, sizeof(char));
+        for (unsigned int i = 0; i < MAX_NAME_LENGTH; ++i) {
+            name[i] = name_[i];
+            if (name[i] == '\0') break;
+        }
+    }
+
+public:
+    ~VariableToken() override {
+        free(name);
+    }
+
+    static constexpr size_t MAX_NAME_LENGTH = 256u;
+
+    static std::shared_ptr<VariableToken> getVariableByName(char* name);
+
+    void print() const override;
+
+    double calculate(size_t argc __attribute__((unused)), ...) const override;
+
+    const char* getName() const {
+        return name;
+    }
 };
 
 /**

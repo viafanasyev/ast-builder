@@ -8,10 +8,10 @@ op: -", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
 2 [label="binary op
 op: -", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
 2->3
-3 [label="constant
+3 [label="const
 value: 2", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
 2->4
-4 [label="constant
+4 [label="const
 value: 3", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
 1->5
 5 [label="binary op
@@ -23,28 +23,15 @@ op: *", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
 7 [label="unary op
 op: -", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
 7->8
-8 [label="constant
+8 [label="const
 value: 4", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
 6->9
-9 [label="constant
-value: 5", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+9 [label="var
+name: x", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
 5->10
-10 [label="constant
-value: 2", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+10 [label="var
+name: y", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
 0->11
-11 [label="unary op
-op: -", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
-11->12
-12 [label="unary op
-op: -", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
-12->13
-13 [label="unary op
-op: -", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
-13->14
-14 [label="unary op
-op: -", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
-14->15
-15 [label="constant
+11 [label="const
 value: 5", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
-"= 14" [shape=box];
 }

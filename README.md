@@ -3,7 +3,8 @@
 ## Project description
 
 This program is developed as a part of ISP RAS course.  
-This program can build AST from mathematical expression of real numbers (even negative) with parentheses and simple operators (`+`, `-`, `*`, `/`) 
+This program can build AST from mathematical expression of real numbers (even negative) and variables (variable name starts with letter and contain letters and digits) 
+with parentheses and simple operators (`+`, `-`, `*`, `/`) 
 and visualize it using graphviz. Also it can convert expressions into TeX/PDF format.
 
 AST can be optimized with `--optimized` option. Currently supported optimizations:
@@ -41,8 +42,8 @@ NOTE: This program runs only on UNIX-like OS. Also `dot` and `pdflatex` should b
 To run main program execute next commands in terminal:
 ```shell script
 cmake . && make
-./ast-builder "2 - 3 - (-4 * 5) / 2 + ----5"
-./ast-builder "2 - 3 - (-4 * 5) / 2 + ----5" --optimized
+./ast-builder "2 - 3 - (-4 * x) / y + ----5"
+./ast-builder "2 - 3 - (-4 * x) / y + ----5" --optimized
 ```
 
 #### Tests

@@ -19,7 +19,7 @@ private:
 
 public:
     explicit ASTNode(const std::shared_ptr<Token>& token_) {
-        assert(token_->getType() == TokenType::CONSTANT_VALUE);
+        assert((token_->getType() == TokenType::CONSTANT_VALUE) || (token_->getType() == TokenType::VARIABLE));
 
         token = token_;
         childrenNumber = 0;

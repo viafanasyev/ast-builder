@@ -6,6 +6,7 @@
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
+#include <memory>
 #include <stdexcept>
 #include "tokenizer.h"
 
@@ -95,6 +96,25 @@ double UnaryAdditionOperator::calculate(size_t argc, ...) const {
     return operand;
 }
 
+std::map<char*, std::shared_ptr<VariableToken>, VariableToken::keyCompare> VariableToken::symbolTable;
+
+std::shared_ptr<VariableToken> VariableToken::getVariableByName(char* name) {
+    if (symbolTable.count(name) == 0) {
+        auto token = std::shared_ptr<VariableToken>(new VariableToken(name));
+        symbolTable[token->name] = token;
+    }
+    return symbolTable[name];
+}
+
+void VariableToken::print() const {
+    Token::print();
+    printf(" NAME=%s", name);
+}
+
+double VariableToken::calculate(size_t argc __attribute__((unused)), ...) const {
+    throw std::logic_error("Variable can't be calculated");
+}
+
 static bool addNextToken(char*& expression, std::vector<std::shared_ptr<Token>>& tokens);
 
 /**
@@ -139,9 +159,11 @@ static bool addNextToken(char*& expression, std::vector<std::shared_ptr<Token>>&
         }
 
         bool isBinary = (previousToken != nullptr) && (
-                (previousToken->getType() == CONSTANT_VALUE) ||
-                ((previousToken->getType() == PARENTHESIS) &&
-                 (dynamic_cast<ParenthesisToken*>(previousToken)->isClose()))
+            (previousToken->getType() == CONSTANT_VALUE) ||
+            (previousToken->getType() == VARIABLE) || (
+                (previousToken->getType() == PARENTHESIS) &&
+                (dynamic_cast<ParenthesisToken*>(previousToken)->isClose())
+            )
         );
 
         if (isBinary) {
@@ -162,6 +184,14 @@ static bool addNextToken(char*& expression, std::vector<std::shared_ptr<Token>>&
     } else if (isdigit(*expression)) {
         double tokenValue = strtod(expression, &expression);
         tokens.emplace_back(new ConstantValueToken(tokenValue));
+    } else if (isalpha(*expression)) { // Variable name starts with letter
+        char* name = (char*)calloc(VariableToken::MAX_NAME_LENGTH, sizeof(char));
+        unsigned int i = 0;
+        do {
+            name[i++] = *expression++;
+        } while (i < VariableToken::MAX_NAME_LENGTH && (isalpha(*expression) || isdigit(*expression))); // Other symbols in the name can be letters or digits
+        tokens.push_back(VariableToken::getVariableByName(name));
+        free(name);
     } else {
         char message[26];
         snprintf(message, sizeof(message), "Invalid symbol found: '%c'", *expression);
