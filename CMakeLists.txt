@@ -14,7 +14,9 @@ add_executable(
         src/ast.h
         src/ast.cpp
         src/ast-optimizers.h
-        src/ast-optimizers.cpp)
+        src/ast-optimizers.cpp
+        src/ast-math.h
+        src/ast-math.cpp)
 
 add_executable(
         tests

@@ -256,7 +256,7 @@ public:
 
     double calculate(size_t argc __attribute__((unused)), ...) const override;
 
-    const char* getName() const {
+    char* getName() const {
         return name;
     }
 };

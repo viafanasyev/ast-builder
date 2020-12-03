@@ -11,6 +11,9 @@ AST can be optimized with `--optimized` option. Currently supported optimization
 * Unary plus operators removed;
 * Double negation operators removed.
 
+Expression can be differentiated (main program uses `x` as differentiated variable, but `ast-math::differentiate` can use any). 
+Only power operator is not supported for differentiating yet.
+
 ![MISSING AST SAMPLE HERE](https://raw.githubusercontent.com/viafanasyev/ast-builder/master/samples/simple-expression.png)
 ![MISSING TEX SAMPLE HERE](https://raw.githubusercontent.com/viafanasyev/ast-builder/master/samples/simple-expression.pdf.png)
 
@@ -19,14 +22,15 @@ NOTE: This program runs only on UNIX-like OS. Also `dot` and `pdflatex` should b
 ### Structure
 
 * src/ : Main project
-    * ast.h, ast.cpp : Definition and implementation of AST node, AST building, visualization and TeX conversion functions
-    * ast-optimizers.h, ast-optimizers.cpp : Definition and implementation of AST optimizers
-    * tokenizer.h, tokenizer.cpp : Definition and implementation of tokens and tokenizer functions
+    * ast.h, ast.cpp : Definition and implementation of AST node, AST building, visualization and TeX conversion functions;
+    * ast-math.h, ast-math.cpp : Definition and implementation of mathematical functions for AST;
+    * ast-optimizers.h, ast-optimizers.cpp : Definition and implementation of AST optimizers;
+    * tokenizer.h, tokenizer.cpp : Definition and implementation of tokens and tokenizer functions;
     * main.cpp : Entry point for the program.
 
 * test/ : Tests and testing library
-    * testlib.h, testlib.cpp : Library for testing with assertions and helper macros.
-    * tokenizer_tests.cpp : Tests for tokenizer functions
+    * testlib.h, testlib.cpp : Library for testing with assertions and helper macros;
+    * tokenizer_tests.cpp : Tests for tokenizer functions;
     * main.cpp : Entry point for tests. Just runs all tests.
 
 * samples/ : Samples of graphs
