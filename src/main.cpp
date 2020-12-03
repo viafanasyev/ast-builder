@@ -27,6 +27,7 @@ int main(int argc, char* argv[]) {
     auto optimizer = std::make_shared<CompositeOptimizer>();
     optimizer->addOptimizer(std::make_shared<UnaryAdditionOptimizer>());
     optimizer->addOptimizer(std::make_shared<ArithmeticNegationOptimizer>());
+    optimizer->addOptimizer(std::make_shared<TrivialOperationsOptimizer>());
 
     try {
         std::shared_ptr<ASTNode> ASTRoot = buildAST(argv[1]);
