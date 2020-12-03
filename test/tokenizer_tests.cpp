@@ -162,3 +162,24 @@ TEST(tokenize, simpleExpressionWithVariables) {
     ASSERT_OPERATOR_TOKEN(tokens[5], 2, 1, SUBTRACTION);
     ASSERT_VARIABLE_TOKEN(tokens[6], "tmp");
 }
+
+TEST(tokenize, simpleExpressionWithMultiplePowerOperations) {
+    char* expression = (char*)"x + x^2 + x^y^z";
+
+    std::vector<std::shared_ptr<Token>> tokens = tokenize(expression);
+
+    ASSERT_EQUALS(tokens.size(), 11);
+    ASSERT_VARIABLE_TOKEN(tokens[0], "x");
+    ASSERT_OPERATOR_TOKEN(tokens[1], 2, 1, ADDITION);
+    ASSERT_VARIABLE_TOKEN(tokens[2], "x");
+    ASSERT_OPERATOR_TOKEN(tokens[3], 2, 3, POWER);
+    ASSERT_CONSTANT_VALUE_TOKEN(tokens[4], 2);
+    ASSERT_OPERATOR_TOKEN(tokens[5], 2, 1, ADDITION);
+    ASSERT_VARIABLE_TOKEN(tokens[6], "x");
+    ASSERT_OPERATOR_TOKEN(tokens[7], 2, 3, POWER);
+    ASSERT_VARIABLE_TOKEN(tokens[8], "y");
+    ASSERT_OPERATOR_TOKEN(tokens[9], 2, 3, POWER);
+    ASSERT_VARIABLE_TOKEN(tokens[10], "z");
+}
+
+// TODO: Add AST and TeX tests for expressions like (a1^a2)^a3, a1^a2^a3 and (x - y) ^ -(x + y)

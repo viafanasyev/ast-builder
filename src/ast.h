@@ -54,6 +54,7 @@ public:
             children[i] = astNode.children[i];
         }
     }
+
     void swap(ASTNode& astNode) {
         std::swap(token, astNode.token);
         std::swap(childrenNumber, astNode.childrenNumber);
@@ -89,8 +90,12 @@ public:
     double calculate() const;
 
 private:
+    enum TexBraceType { NONE, ROUND, CURLY };
+
     void dotPrint(FILE* dotFile, int& nodeId) const;
-    void texPrint(FILE* texFile, bool braced = false) const;
+    void texPrint(FILE* texFile, TexBraceType braceType = NONE) const;
+
+    static TexBraceType getChildBraceType(const OperatorToken* parentOperator, const Token* child, bool isRightChild);
 };
 
 std::shared_ptr<ASTNode> buildAST(char* expression);

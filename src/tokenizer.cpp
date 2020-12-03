@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <memory>
 #include <stdexcept>
+#include <cmath>
 #include "tokenizer.h"
 
 void Token::print() const {
@@ -96,6 +97,16 @@ double UnaryAdditionOperator::calculate(size_t argc, ...) const {
     return operand;
 }
 
+double PowerOperator::calculate(size_t argc, ...) const {
+    assert(argc == 2);
+    va_list operands;
+    va_start(operands, argc);
+    double leftOperand = va_arg(operands, double);
+    double rightOperand = va_arg(operands, double);
+    va_end(operands);
+    return pow(leftOperand, rightOperand);
+}
+
 std::map<char*, std::shared_ptr<VariableToken>, VariableToken::keyCompare> VariableToken::symbolTable;
 
 std::shared_ptr<VariableToken> VariableToken::getVariableByName(char* name) {
@@ -180,6 +191,9 @@ static bool addNextToken(char*& expression, std::vector<std::shared_ptr<Token>>&
             }
         }
 
+        ++expression;
+    } else if (*expression == '^') {
+        tokens.emplace_back(new PowerOperator());
         ++expression;
     } else if (isdigit(*expression)) {
         double tokenValue = strtod(expression, &expression);

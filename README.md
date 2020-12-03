@@ -4,7 +4,7 @@
 
 This program is developed as a part of ISP RAS course.  
 This program can build AST from mathematical expression of real numbers (even negative) and variables (variable name starts with letter and contain letters and digits) 
-with parentheses and simple operators (`+`, `-`, `*`, `/`) 
+with parentheses and simple operators (`+`, `-`, `*`, `/`, `^`) 
 and visualize it using graphviz. Also it can convert expressions into TeX/PDF format.
 
 AST can be optimized with `--optimized` option. Currently supported optimizations:

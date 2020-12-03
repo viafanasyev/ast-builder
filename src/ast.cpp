@@ -52,7 +52,7 @@ void ASTNode::texify(const char* fileName) const {
     FILE* texFile = fopen(texFileName, "w");
     fprintf(texFile, "\\documentclass{article}\n\\begin{document}\n\\begin{center}\n\t$ ");
     texPrint(texFile);
-    fprintf(texFile, "$\n\\end{center}\n\\end{document}\n");
+    fprintf(texFile, " $\n\\end{center}\n\\end{document}\n");
     fclose(texFile);
 
     char command[1000];
@@ -92,6 +92,8 @@ void ASTNode::dotPrint(FILE* dotFile, int& nodeId) const {
         } else if (operatorToken->getArity() == 2) {
             fprintf(dotFile, "%d [label=\"binary op\nop: %s\", shape=box, style=filled, color=\"grey\", fillcolor=\"#C9E7FF\"];\n",
                     nodeId, operatorSymbol);
+        } else {
+            throw std::logic_error("Unsupported arity of operator. Only unary and binary are supported yet");
         }
         int childrenNodeId = nodeId + 1;
         for (size_t i = 0; i < childrenNumber; ++i) {
@@ -104,40 +106,41 @@ void ASTNode::dotPrint(FILE* dotFile, int& nodeId) const {
     }
 }
 
-static inline bool shouldBeBraced(const OperatorToken* parentOperator, const Token* child, bool isRightChild);
-
-void ASTNode::texPrint(FILE* texFile, bool braced) const {
+void ASTNode::texPrint(FILE* texFile, TexBraceType braceType) const {
     if (token->getType() == TokenType::CONSTANT_VALUE) {
         auto constantValueToken = dynamic_cast<ConstantValueToken*>(token.get());
-        fprintf(texFile, "%lg", constantValueToken->getValue());
+        fprintf(texFile, "{%lg}", constantValueToken->getValue());
     } else if (token->getType() == TokenType::VARIABLE) {
         auto variableToken = dynamic_cast<VariableToken*>(token.get());
-        fprintf(texFile, "%s", variableToken->getName());
+        fprintf(texFile, "{%s}", variableToken->getName());
     } else if (token->getType() == TokenType::OPERATOR) {
         auto operatorToken = dynamic_cast<OperatorToken*>(token.get());
         const char* operatorSymbol = operatorToken->getSymbol();
         if (operatorToken->getArity() == 1) {
+            if (braceType != NONE) fprintf(texFile, braceType == ROUND ? "(" : "{");
             fprintf(texFile, "%s", operatorSymbol);
-            children[0]->texPrint(texFile, true);
+            children[0]->texPrint(texFile, ROUND);
+            if (braceType != NONE) fprintf(texFile, braceType == ROUND ? ")" : "}");
         } else if (operatorToken->getArity() == 2) {
             if (operatorToken->getOperatorType() == OperatorType::DIVISION) {
+                // No braces needed, because `\frac` can be safely used with `^` as `\frac{...}{...} ^ \frac{...}{...}`
                 fprintf(texFile, "\\frac{");
-                children[0]->texPrint(texFile, false);
+                children[0]->texPrint(texFile, NONE);
                 fprintf(texFile, "}{");
-                children[1]->texPrint(texFile, false);
+                children[1]->texPrint(texFile, NONE);
                 fprintf(texFile, "}");
             } else {
-                if (braced) fprintf(texFile, "(");
+                if (braceType != NONE) fprintf(texFile, braceType == ROUND ? "(" : "{");
                 auto leftChild = children[0];
-                bool isLeftChildBraced = shouldBeBraced(operatorToken, leftChild->getToken().get(), false);
-                leftChild->texPrint(texFile, isLeftChildBraced);
+                TexBraceType leftChildBrace = getChildBraceType(operatorToken, leftChild->getToken().get(), false);
+                leftChild->texPrint(texFile, leftChildBrace);
 
                 fprintf(texFile, " %s ", operatorSymbol);
 
                 auto rightChild = children[1];
-                bool isRightChildBraced = shouldBeBraced(operatorToken, rightChild->getToken().get(), true);
-                rightChild->texPrint(texFile, isRightChildBraced);
-                if (braced) fprintf(texFile, ")");
+                TexBraceType rightChildBrace = getChildBraceType(operatorToken, rightChild->getToken().get(), true);
+                rightChild->texPrint(texFile, rightChildBrace);
+                if (braceType != NONE) fprintf(texFile, braceType == ROUND ? ")" : "}");
             }
         }
     } else {
@@ -145,18 +148,21 @@ void ASTNode::texPrint(FILE* texFile, bool braced) const {
     }
 }
 
-static inline bool shouldBeBraced(const OperatorToken* parentOperator, const Token* child, bool isRightChild) {
+ASTNode::TexBraceType ASTNode::getChildBraceType(const OperatorToken* parentOperator, const Token* child, bool isRightChild) {
     if (child->getType() != TokenType::OPERATOR)
-        return false;
+        return NONE;
+
+    if (parentOperator->getOperatorType() == OperatorType::POWER)
+        return isRightChild ? CURLY : ROUND;
 
     if (dynamic_cast<const OperatorToken*>(child)->getPrecedence() < parentOperator->getPrecedence())
-        return true;
+        return ROUND;
 
     if (isRightChild && (parentOperator->getOperatorType() == OperatorType::SUBTRACTION) &&
         (dynamic_cast<const OperatorToken*>(child)->getPrecedence() == parentOperator->getPrecedence()))
-        return true;
+        return ROUND;
 
-    return false;
+    return NONE;
 }
 
 static inline void connectWithOperands(std::stack<std::shared_ptr<ASTNode> >& astNodes, const std::shared_ptr<Token>& parentNodeToken);
