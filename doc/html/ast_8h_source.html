@@ -87,15 +87,15 @@ $(function() {
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="class_a_s_t_node.html">ASTNode</a>(<span class="keyword">const</span> std::shared_ptr&lt;Token&gt;&amp; token_) {</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        assert(token_-&gt;getType() == TokenType::CONSTANT_VALUE);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        assert((token_-&gt;getType() == TokenType::CONSTANT_VALUE) || (token_-&gt;getType() == TokenType::VARIABLE));</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        token = token_;</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        childrenNumber = 0;</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    }</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <a class="code" href="class_a_s_t_node.html">ASTNode</a>(<span class="keyword">const</span> std::shared_ptr&lt;Token&gt;&amp; token_, <span class="keyword">const</span> std::shared_ptr&lt;ASTNode&gt;&amp; child) {</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        assert(token_-&gt;getType() == TokenType::OPERATOR);</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        assert(<span class="keyword">dynamic_cast&lt;</span><a class="code" href="class_operator_token.html">OperatorToken</a>*<span class="keyword">&gt;</span>(token_.get())-&gt;getArity() == 1);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        assert(((token_-&gt;getType() == TokenType::OPERATOR) &amp;&amp; (<span class="keyword">dynamic_cast&lt;</span><a class="code" href="class_operator_token.html">OperatorToken</a>*<span class="keyword">&gt;</span>(token_.get())-&gt;getArity() == 1)) ||</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;               ((token_-&gt;getType() == TokenType::FUNCTION) &amp;&amp; (<span class="keyword">dynamic_cast&lt;</span><a class="code" href="class_function_token.html">FunctionToken</a>*<span class="keyword">&gt;</span>(token_.get())-&gt;getArity() == 1)));</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        token = token_;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        childrenNumber = 1;</div>
@@ -122,54 +122,61 @@ $(function() {
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;            children[i] = astNode.children[i];</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        }</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    }</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordtype">void</span> swap(<a class="code" href="class_a_s_t_node.html">ASTNode</a>&amp; astNode) {</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        std::swap(token, astNode.token);</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        std::swap(childrenNumber, astNode.childrenNumber);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        std::swap(children, astNode.children);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    }</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <a class="code" href="class_a_s_t_node.html">ASTNode</a>&amp; operator=(<a class="code" href="class_a_s_t_node.html">ASTNode</a> astNode) {</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        swap(astNode);</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    }</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    ~<a class="code" href="class_a_s_t_node.html">ASTNode</a>() {</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="keyword">delete</span>[] children;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    }</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    std::shared_ptr&lt;ASTNode&gt;* getChildren()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keywordflow">return</span> children;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    }</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordtype">size_t</span> getChildrenNumber()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordflow">return</span> childrenNumber;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    }</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    std::shared_ptr&lt;Token&gt; getToken()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="keywordflow">return</span> token;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    }</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordtype">void</span> print(<span class="keywordtype">int</span> depth = 0) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordtype">void</span> visualize(<span class="keyword">const</span> <span class="keywordtype">char</span>* fileName) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordtype">void</span> texify(<span class="keyword">const</span> <span class="keywordtype">char</span>* fileName) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordtype">double</span> calculate() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordtype">void</span> dotPrint(FILE* dotFile, <span class="keywordtype">int</span>&amp; nodeId) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordtype">void</span> texPrint(FILE* texFile, <span class="keywordtype">bool</span> braced = <span class="keyword">false</span>) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;};</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;std::shared_ptr&lt;ASTNode&gt; buildAST(<span class="keywordtype">char</span>* expression);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">void</span> swap(<a class="code" href="class_a_s_t_node.html">ASTNode</a>&amp; astNode) {</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        std::swap(token, astNode.token);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        std::swap(childrenNumber, astNode.childrenNumber);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        std::swap(children, astNode.children);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    }</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <a class="code" href="class_a_s_t_node.html">ASTNode</a>&amp; operator=(<a class="code" href="class_a_s_t_node.html">ASTNode</a> astNode) {</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        swap(astNode);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    }</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    ~<a class="code" href="class_a_s_t_node.html">ASTNode</a>() {</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keyword">delete</span>[] children;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    }</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    std::shared_ptr&lt;ASTNode&gt;* getChildren()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keywordflow">return</span> children;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    }</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordtype">size_t</span> getChildrenNumber()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keywordflow">return</span> childrenNumber;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    }</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    std::shared_ptr&lt;Token&gt; getToken()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="keywordflow">return</span> token;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    }</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordtype">void</span> print(<span class="keywordtype">int</span> depth = 0) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordtype">void</span> visualize(<span class="keyword">const</span> <span class="keywordtype">char</span>* fileName) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordtype">void</span> texify(<span class="keyword">const</span> <span class="keywordtype">char</span>* fileName) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordtype">double</span> calculate() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keyword">enum</span> TexBraceType { NONE, ROUND, CURLY };</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordtype">void</span> dotPrint(FILE* dotFile, <span class="keywordtype">int</span>&amp; nodeId) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordtype">void</span> texPrint(FILE* texFile, TexBraceType braceType = NONE) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;std::shared_ptr&lt;ASTNode&gt; buildAST(<span class="keyword">const</span> std::vector&lt;std::shared_ptr&lt;Token&gt; &gt;&amp; infixNotationTokens);</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="preprocessor">#endif // AST_BUILDER_AST_H</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keyword">static</span> TexBraceType getChildBraceType(<span class="keyword">const</span> <a class="code" href="class_operator_token.html">OperatorToken</a>* parentOperator, <span class="keyword">const</span> <a class="code" href="class_token.html">Token</a>* child, <span class="keywordtype">bool</span> isRightChild);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;};</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;std::shared_ptr&lt;ASTNode&gt; buildAST(<span class="keywordtype">char</span>* expression);</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;std::shared_ptr&lt;ASTNode&gt; buildAST(<span class="keyword">const</span> std::vector&lt;std::shared_ptr&lt;Token&gt; &gt;&amp; infixNotationTokens);</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="preprocessor">#endif // AST_BUILDER_AST_H</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="atokenizer_8h_html"><div class="ttname"><a href="tokenizer_8h.html">tokenizer.h</a></div><div class="ttdoc">Definition of tokens that can be parsed and a tokenizer functions.</div></div>
+<div class="ttc" id="aclass_token_html"><div class="ttname"><a href="class_token.html">Token</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:31</div></div>
 <div class="ttc" id="aclass_a_s_t_node_html"><div class="ttname"><a href="class_a_s_t_node.html">ASTNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:13</div></div>
-<div class="ttc" id="aclass_operator_token_html"><div class="ttname"><a href="class_operator_token.html">OperatorToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:99</div></div>
+<div class="ttc" id="aclass_operator_token_html"><div class="ttname"><a href="class_operator_token.html">OperatorToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:107</div></div>
+<div class="ttc" id="aclass_function_token_html"><div class="ttname"><a href="class_function_token.html">FunctionToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:282</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

@@ -122,4 +122,23 @@ public:
     std::shared_ptr<ASTNode>& optimize(std::shared_ptr<ASTNode>& node) const override;
 };
 
+// TODO: 0 - x -> -x
+// TODO: Push negation operators down to constants and variables. (to eliminate x - -4*x)
+
+// TODO: x + -y -> x - y ; x - -y -> x + y
+
+// TODO: -1 * x -> -x ; x * -1 -> -x (NOTE: Use before ArithmeticNegationOptimizer: -(-1 * X) -> --X -> X; otherwise --X wil be produced) (But what if --1 * --X? It will be optimized to 1 * X, not X)
+/*
+ *      ...                ...
+ *     /                  /
+ *    *        --->      -
+ *   / \                 |
+ *  /   \                |
+ * -    X                X
+ * |
+ * |
+ * 1
+ */
+// TODO: -1 * -x -> x ; -x * -1 -> x (Solution of the problem above?)
+
 #endif // AST_BUILDER_AST_OPTIMIZERS_H

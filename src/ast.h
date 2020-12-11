@@ -26,8 +26,8 @@ public:
     }
 
     ASTNode(const std::shared_ptr<Token>& token_, const std::shared_ptr<ASTNode>& child) {
-        assert(token_->getType() == TokenType::OPERATOR);
-        assert(dynamic_cast<OperatorToken*>(token_.get())->getArity() == 1);
+        assert(((token_->getType() == TokenType::OPERATOR) && (dynamic_cast<OperatorToken*>(token_.get())->getArity() == 1)) ||
+               ((token_->getType() == TokenType::FUNCTION) && (dynamic_cast<FunctionToken*>(token_.get())->getArity() == 1)));
 
         token = token_;
         childrenNumber = 1;

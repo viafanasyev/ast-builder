@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['operatortoken_60',['OperatorToken',['../class_operator_token.html',1,'']]],
-  ['optimizer_61',['Optimizer',['../class_optimizer.html',1,'']]]
+  ['lnfunction_83',['LnFunction',['../class_ln_function.html',1,'']]]
 ];

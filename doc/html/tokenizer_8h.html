@@ -78,6 +78,8 @@ $(function() {
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;cctype&gt;</code><br />
 <code>#include &lt;climits&gt;</code><br />
+<code>#include &lt;cstring&gt;</code><br />
+<code>#include &lt;map&gt;</code><br />
 <code>#include &lt;memory&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 </div>
@@ -105,12 +107,33 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_unary_addition_operator.html">UnaryAdditionOperator</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_power_operator.html">PowerOperator</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_variable_token.html">VariableToken</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_function_token.html">FunctionToken</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_sin_function.html">SinFunction</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cos_function.html">CosFunction</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_tg_function.html">TgFunction</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_ctg_function.html">CtgFunction</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_ln_function.html">LnFunction</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:aa520fbf142ba1e7e659590c07da31921"><td class="memItemLeft" align="right" valign="top"><a id="aa520fbf142ba1e7e659590c07da31921"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>TokenType</b> { <b>CONSTANT_VALUE</b>, 
+<tr class="memitem:aa520fbf142ba1e7e659590c07da31921"><td class="memItemLeft" align="right" valign="top"><a id="aa520fbf142ba1e7e659590c07da31921"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>TokenType</b> { <br />
+&#160;&#160;<b>CONSTANT_VALUE</b>, 
 <b>PARENTHESIS</b>, 
-<b>OPERATOR</b>
+<b>OPERATOR</b>, 
+<b>VARIABLE</b>, 
+<br />
+&#160;&#160;<b>FUNCTION</b>
+<br />
  }</td></tr>
 <tr class="separator:aa520fbf142ba1e7e659590c07da31921"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a02b2d1d62293b20242e3dcfbdd0117"><td class="memItemLeft" align="right" valign="top"><a id="a6a02b2d1d62293b20242e3dcfbdd0117"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>OperatorType</b> { <br />
@@ -120,10 +143,21 @@ Enumerations</h2></td></tr>
 <b>DIVISION</b>, 
 <br />
 &#160;&#160;<b>ARITHMETIC_NEGATION</b>, 
-<b>UNARY_ADDITION</b>
+<b>UNARY_ADDITION</b>, 
+<b>POWER</b>
 <br />
  }</td></tr>
 <tr class="separator:a6a02b2d1d62293b20242e3dcfbdd0117"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42a11575cc237e37732d560240e04371"><td class="memItemLeft" align="right" valign="top"><a id="a42a11575cc237e37732d560240e04371"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>FunctionType</b> { <br />
+&#160;&#160;<b>SIN</b>, 
+<b>COS</b>, 
+<b>TG</b>, 
+<b>CTG</b>, 
+<br />
+&#160;&#160;<b>LN</b>
+<br />
+ }</td></tr>
+<tr class="separator:a42a11575cc237e37732d560240e04371"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>

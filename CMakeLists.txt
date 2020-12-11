@@ -16,7 +16,9 @@ add_executable(
         src/ast-optimizers.h
         src/ast-optimizers.cpp
         src/ast-math.h
-        src/ast-math.cpp)
+        src/ast-math.cpp
+        src/recursive_parser.h
+        src/recursive_parser.cpp src/SyntaxError.cpp src/SyntaxError.h)
 
 add_executable(
         tests

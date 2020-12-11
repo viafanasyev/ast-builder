@@ -69,16 +69,26 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Inherited by <a class="el" href="class_arithmetic_negation_optimizer.html">ArithmeticNegationOptimizer</a>, <a class="el" href="class_composite_optimizer.html">CompositeOptimizer</a>, and <a class="el" href="class_unary_addition_optimizer.html">UnaryAdditionOptimizer</a>.</p>
+<p>Inherited by <a class="el" href="class_arithmetic_negation_optimizer.html">ArithmeticNegationOptimizer</a>, <a class="el" href="class_composite_optimizer.html">CompositeOptimizer</a>, <a class="el" href="class_constant_compressor.html">ConstantCompressor</a>, <a class="el" href="class_trivial_addition_optimizer.html">TrivialAdditionOptimizer</a>, <a class="el" href="class_trivial_multiplication_optimizer.html">TrivialMultiplicationOptimizer</a>, and <a class="el" href="class_unary_addition_optimizer.html">UnaryAdditionOptimizer</a>.</p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac8d11a0ea1fd99a4f880bbc4ea7909df"><td class="memItemLeft" align="right" valign="top"><a id="ac8d11a0ea1fd99a4f880bbc4ea7909df"></a>
-virtual std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>optimize</b> (std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;node) const =0</td></tr>
-<tr class="separator:ac8d11a0ea1fd99a4f880bbc4ea7909df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6a8b1e73fd76423965cd2fe6a41cac9"><td class="memItemLeft" align="right" valign="top"><a id="ab6a8b1e73fd76423965cd2fe6a41cac9"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Optimizer</b> (bool optimizeChildrenFirst_)</td></tr>
+<tr class="separator:ab6a8b1e73fd76423965cd2fe6a41cac9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c5aa8071061bb2e659aeb1ceb76ae88"><td class="memItemLeft" align="right" valign="top"><a id="a8c5aa8071061bb2e659aeb1ceb76ae88"></a>
+virtual std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>optimize</b> (std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;node) const</td></tr>
+<tr class="separator:a8c5aa8071061bb2e659aeb1ceb76ae88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62e3a383b7f87a2b652d538ece8ec02b"><td class="memItemLeft" align="right" valign="top"><a id="a62e3a383b7f87a2b652d538ece8ec02b"></a>
+virtual std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>optimizeCurrent</b> (std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;node) const =0</td></tr>
+<tr class="separator:a62e3a383b7f87a2b652d538ece8ec02b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae57d345d22fed15f36327bfcd762bd13"><td class="memItemLeft" align="right" valign="top"><a id="ae57d345d22fed15f36327bfcd762bd13"></a>
+virtual std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>optimizeChildren</b> (std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;node) const</td></tr>
+<tr class="separator:ae57d345d22fed15f36327bfcd762bd13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/<a class="el" href="ast-optimizers_8h_source.html">ast-optimizers.h</a></li>
+<li>src/<a class="el" href="ast-optimizers_8cpp.html">ast-optimizers.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

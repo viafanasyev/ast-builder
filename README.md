@@ -4,8 +4,10 @@
 
 This program is developed as a part of ISP RAS course.  
 This program can build AST from mathematical expression of real numbers (even negative) and variables (variable name starts with letter and contain letters and digits) 
-with parentheses and simple operators (`+`, `-`, `*`, `/`, `^`) 
+with parentheses, simple operators (`+`, `-`, `*`, `/`, `^`) and some mathematical functions (`sin`, `cos`, `tg`, `ctg`, `ln`) 
 and visualize it using graphviz. Also it can convert expressions into TeX/PDF format.
+
+This program uses recursive parsing algorithm implemented here: https://github.com/viafanasyev/recursive-parser.
 
 AST can be optimized with `--optimized` option. Currently supported optimizations:
 * Unary plus operators removed;
@@ -26,6 +28,8 @@ NOTE: This program runs only on UNIX-like OS. Also `dot` and `pdflatex` should b
     * ast-math.h, ast-math.cpp : Definition and implementation of mathematical functions for AST;
     * ast-optimizers.h, ast-optimizers.cpp : Definition and implementation of AST optimizers;
     * tokenizer.h, tokenizer.cpp : Definition and implementation of tokens and tokenizer functions;
+    * recursive_parser.h, recursive_parser.cpp : Definition and implementation of recursive parser;
+    * SyntaxError.h, SyntaxError.cpp : Definition and implementation of exception that is thrown on syntax error;
     * main.cpp : Entry point for the program.
 
 * test/ : Tests and testing library
@@ -46,8 +50,8 @@ NOTE: This program runs only on UNIX-like OS. Also `dot` and `pdflatex` should b
 To run main program execute next commands in terminal:
 ```shell script
 cmake . && make
-./ast-builder "2 - 3 - (-4 * x) / y + ----5"
-./ast-builder "2 - 3 - (-4 * x) / y + ----5" --optimized
+./ast-builder "sin(2 - x/2)^2 + cos(2 - x/2)^2"
+./ast-builder "sin(2 - x/2)^2 + cos(2 - x/2)^2" --optimized
 ```
 
 #### Tests

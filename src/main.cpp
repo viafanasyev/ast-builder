@@ -6,6 +6,8 @@
 #include "ast.h"
 #include "ast-math.h"
 #include "ast-optimizers.h"
+#include "recursive_parser.h"
+#include "SyntaxError.h"
 
 void outputAST(const std::shared_ptr<ASTNode>& root, const char* fileName) {
     root->visualize(fileName);
@@ -30,16 +32,18 @@ int main(int argc, char* argv[]) {
     optimizer->addOptimizer(std::make_shared<TrivialOperationsOptimizer>());
 
     try {
-        std::shared_ptr<ASTNode> ASTRoot = buildAST(argv[1]);
+        std::shared_ptr<ASTNode> ASTRoot = buildASTRecursively(argv[1]);
         if (optimized) ASTRoot = optimizer->optimize(ASTRoot);
         outputAST(ASTRoot, "expression");
 
         ASTRoot = differentiate(ASTRoot, "x");
         if (optimized) ASTRoot = optimizer->optimize(ASTRoot);
         outputAST(ASTRoot, "expression-derivative");
-    } catch (std::invalid_argument& ex) {
+    } catch (const std::invalid_argument& ex) {
         fprintf(stderr, "Invalid expression: %s", ex.what());
-    } catch (std::logic_error& ex) {
+    } catch (const std::logic_error& ex) {
         fprintf(stderr, "Invalid expression: %s", ex.what());
+    } catch (const SyntaxError& ex) {
+        fprintf(stderr, "Syntax error: %s", ex.what());
     }
 }

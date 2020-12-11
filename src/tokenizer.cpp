@@ -126,6 +126,56 @@ double VariableToken::calculate(size_t argc __attribute__((unused)), ...) const 
     throw std::logic_error("Variable can't be calculated");
 }
 
+void FunctionToken::print() const {
+    Token::print();
+    printf(" ARITY=%zu, TYPE=%s", arity, FunctionTypeStrings[functionType]);
+}
+
+double SinFunction::calculate(size_t argc, ...) const {
+    assert(argc == 1);
+    va_list operands;
+    va_start(operands, argc);
+    double operand = va_arg(operands, double);
+    va_end(operands);
+    return sin(operand);
+}
+
+double CosFunction::calculate(size_t argc, ...) const {
+    assert(argc == 1);
+    va_list operands;
+    va_start(operands, argc);
+    double operand = va_arg(operands, double);
+    va_end(operands);
+    return cos(operand);
+}
+
+double TgFunction::calculate(size_t argc, ...) const {
+    assert(argc == 1);
+    va_list operands;
+    va_start(operands, argc);
+    double operand = va_arg(operands, double);
+    va_end(operands);
+    return tan(operand);
+}
+
+double CtgFunction::calculate(size_t argc, ...) const {
+    assert(argc == 1);
+    va_list operands;
+    va_start(operands, argc);
+    double operand = va_arg(operands, double);
+    va_end(operands);
+    return 1. / tan(operand);
+}
+
+double LnFunction::calculate(size_t argc, ...) const {
+    assert(argc == 1);
+    va_list operands;
+    va_start(operands, argc);
+    double operand = va_arg(operands, double);
+    va_end(operands);
+    return log(operand);
+}
+
 static bool addNextToken(char*& expression, std::vector<std::shared_ptr<Token>>& tokens);
 
 /**

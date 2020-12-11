@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['subtractionoperator_63',['SubtractionOperator',['../class_subtraction_operator.html',1,'']]]
+  ['operatortoken_85',['OperatorToken',['../class_operator_token.html',1,'']]],
+  ['optimizer_86',['Optimizer',['../class_optimizer.html',1,'']]]
 ];

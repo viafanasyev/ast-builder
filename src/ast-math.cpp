@@ -18,34 +18,58 @@ static inline std::shared_ptr<ASTNode> copy(const std::shared_ptr<ASTNode>& root
         const OperatorType operatorType = operatorToken->getOperatorType();
         if (operatorToken->getArity() == 1) {
             std::shared_ptr<ASTNode> child = copy(root->getChildren()[0]);
-            if (operatorType == ARITHMETIC_NEGATION) {
-                return std::make_shared<ASTNode>(std::make_shared<ArithmeticNegationOperator>(), child);
-            } else if (operatorType == UNARY_ADDITION) {
-                return std::make_shared<ASTNode>(std::make_shared<UnaryAdditionOperator>(), child);
-            } else {
-                throw std::logic_error("Unsupported unary operator type");
+            switch (operatorType) {
+                case ARITHMETIC_NEGATION:
+                    return std::make_shared<ASTNode>(std::make_shared<ArithmeticNegationOperator>(), child);
+                case UNARY_ADDITION:
+                    return std::make_shared<ASTNode>(std::make_shared<UnaryAdditionOperator>(), child);
+                default:
+                    throw std::logic_error("Unsupported unary operator type");
             }
         } else if (operatorToken->getArity() == 2) {
             const auto leftChild  = copy(root->getChildren()[0]);
             const auto rightChild = copy(root->getChildren()[1]);
-            if (operatorType == ADDITION) {
-                return std::make_shared<ASTNode>(std::make_shared<AdditionOperator>(), leftChild, rightChild);
-            } else if (operatorType == SUBTRACTION) {
-                return std::make_shared<ASTNode>(std::make_shared<SubtractionOperator>(), leftChild, rightChild);
-            } else if (operatorType == MULTIPLICATION) {
-                return std::make_shared<ASTNode>(std::make_shared<MultiplicationOperator>(), leftChild, rightChild);
-            } else if (operatorType == DIVISION) {
-                return std::make_shared<ASTNode>(std::make_shared<DivisionOperator>(), leftChild, rightChild);
-            } else if  (operatorType == POWER) {
-                return std::make_shared<ASTNode>(std::make_shared<PowerOperator>(), leftChild, rightChild);
-            } else {
-                throw std::logic_error("Unsupported binary operator type");
+            switch (operatorType) {
+                case ADDITION:
+                    return std::make_shared<ASTNode>(std::make_shared<AdditionOperator>(), leftChild, rightChild);
+                case SUBTRACTION:
+                    return std::make_shared<ASTNode>(std::make_shared<SubtractionOperator>(), leftChild, rightChild);
+                case MULTIPLICATION:
+                    return std::make_shared<ASTNode>(std::make_shared<MultiplicationOperator>(), leftChild, rightChild);
+                case DIVISION:
+                    return std::make_shared<ASTNode>(std::make_shared<DivisionOperator>(), leftChild, rightChild);
+                case POWER:
+                    return std::make_shared<ASTNode>(std::make_shared<PowerOperator>(), leftChild, rightChild);
+                default:
+                    throw std::logic_error("Unsupported binary operator type");
             }
         } else {
             throw std::logic_error("Unsupported arity of operator. Only unary and binary are supported yet");
         }
+    } else if (rootTokenType == FUNCTION) {
+        const auto functionToken = dynamic_cast<FunctionToken*>(root->getToken().get());
+        const FunctionType functionType = functionToken->getFunctionType();
+        if (functionToken->getArity() == 1) {
+            std::shared_ptr<ASTNode> child = copy(root->getChildren()[0]);
+            switch (functionType) {
+                case SIN:
+                    return std::make_shared<ASTNode>(std::make_shared<SinFunction>(), child);
+                case COS:
+                    return std::make_shared<ASTNode>(std::make_shared<CosFunction>(), child);
+                case TG:
+                    return std::make_shared<ASTNode>(std::make_shared<TgFunction>(), child);
+                case CTG:
+                    return std::make_shared<ASTNode>(std::make_shared<CtgFunction>(), child);
+                case LN:
+                    return std::make_shared<ASTNode>(std::make_shared<LnFunction>(), child);
+                default:
+                    throw std::logic_error("Unsupported unary function type");
+            }
+        } else {
+            throw std::logic_error("Unsupported arity of function. Only unary are supported yet");
+        }
     } else {
-        throw std::logic_error("Unsupported toke type");
+        throw std::logic_error("Unsupported token type");
     }
 }
 
@@ -98,15 +122,61 @@ std::shared_ptr<ASTNode> differentiate(const std::shared_ptr<ASTNode>& root, con
                 const auto numerator    = std::make_shared<ASTNode>(std::make_shared<SubtractionOperator>(), leftSubTree, rightSubTree);
                 const auto denominator  = std::make_shared<ASTNode>(std::make_shared<MultiplicationOperator>(), rightChildCopy, rightChildCopy);
                 return std::make_shared<ASTNode>(std::make_shared<DivisionOperator>(), numerator, denominator);
-            } else if  (operatorType == POWER) { // TODO
-                throw std::logic_error("Derivative of power operator is not supported yet");
+            } else if  (operatorType == POWER) {
+                const auto leftChildType  = root->getChildren()[0]->getToken()->getType();
+                const auto rightChildType = root->getChildren()[1]->getToken()->getType();
+                if (leftChildType == CONSTANT_VALUE && rightChildType == CONSTANT_VALUE) { // (C^C)' = 0
+                    return std::make_shared<ASTNode>(std::make_shared<ConstantValueToken>(0));
+                } else if (rightChildType == CONSTANT_VALUE) { // (f(x)^C)' = C * f(x)^(C - 1) * (f(x))'
+                    const auto decConst = std::make_shared<ASTNode>(std::make_shared<ConstantValueToken>(rightChildCopy->calculate() - 1));
+                    const auto leftMultiplier  = std::make_shared<ASTNode>(std::make_shared<MultiplicationOperator>(), rightChildCopy, leftChildDerivative);
+                    const auto rightMultiplier = std::make_shared<ASTNode>(std::make_shared<PowerOperator>(), leftChildCopy, decConst);
+                    return std::make_shared<ASTNode>(std::make_shared<MultiplicationOperator>(), leftMultiplier, rightMultiplier);
+                } else if (leftChildType == CONSTANT_VALUE) { // (C^f(x))' = ln(C) * C^f(x) * f(x)'
+                    const auto rootCopy = copy(root);
+                    const auto lnConst = std::make_shared<ASTNode>(std::make_shared<LnFunction>(), leftChildCopy);
+                    const auto leftMultiplier = std::make_shared<ASTNode>(std::make_shared<MultiplicationOperator>(), lnConst, rightChildDerivative);
+                    return std::make_shared<ASTNode>(std::make_shared<MultiplicationOperator>(), leftMultiplier, rootCopy);
+                } else { // TODO: (f(x) ^ g(x))' = f(x)^(g(x) - 1) * (g(x) * f(x)' + f(x) * ln(f(x)) * g(x)')
+                    throw std::logic_error("Derivative of f(x)^g(x) is not supported yet");
+                }
             } else {
                 throw std::logic_error("Unsupported binary operator type");
             }
         } else {
             throw std::logic_error("Unsupported arity of operator. Only unary and binary are supported yet");
         }
+    } else if (rootTokenType == FUNCTION) {
+        const auto functionToken = dynamic_cast<FunctionToken*>(root->getToken().get());
+        const FunctionType functionType = functionToken->getFunctionType();
+        if (functionToken->getArity() == 1) {
+            std::shared_ptr<ASTNode> childDerivative = differentiate(root->getChildren()[0], differentiatedVariableName);
+            std::shared_ptr<ASTNode> childCopy = copy(root->getChildren()[0]);
+            if (functionType == SIN) { // sin(f(x))' = f(x)' * cos(f(x))
+                auto funcDerivative = std::make_shared<ASTNode>(std::make_shared<CosFunction>(), childCopy);
+                return std::make_shared<ASTNode>(std::make_shared<MultiplicationOperator>(), childDerivative, funcDerivative);
+            } else if (functionType == COS) { // cos(f(x))' = f(x)' * -sin(f(x))
+                auto funcDerivative = std::make_shared<ASTNode>(std::make_shared<SinFunction>(), childCopy);
+                funcDerivative = std::make_shared<ASTNode>(std::make_shared<ArithmeticNegationOperator>(), funcDerivative);
+                return std::make_shared<ASTNode>(std::make_shared<MultiplicationOperator>(), childDerivative, funcDerivative);
+            } else if (functionType == TG) { // tg(f(x))' = f(x)' / cos(f(x))^2
+                auto funcDerivative = std::make_shared<ASTNode>(std::make_shared<CosFunction>(), childCopy);
+                funcDerivative = std::make_shared<ASTNode>(std::make_shared<PowerOperator>(), funcDerivative, std::make_shared<ASTNode>(std::make_shared<ConstantValueToken>(2)));
+                return std::make_shared<ASTNode>(std::make_shared<DivisionOperator>(), childDerivative, funcDerivative);
+            } else if (functionType == CTG) { // ctg(f(x))' = f(x)' / -sin(f(x))^2
+                auto funcDerivative = std::make_shared<ASTNode>(std::make_shared<SinFunction>(), childCopy);
+                funcDerivative = std::make_shared<ASTNode>(std::make_shared<PowerOperator>(), funcDerivative, std::make_shared<ASTNode>(std::make_shared<ConstantValueToken>(2)));
+                funcDerivative = std::make_shared<ASTNode>(std::make_shared<ArithmeticNegationOperator>(), funcDerivative);
+                return std::make_shared<ASTNode>(std::make_shared<DivisionOperator>(), childDerivative, funcDerivative);
+            } else if (functionType == LN) { // ln(f(x))' = f(x)' / f(x)
+                return std::make_shared<ASTNode>(std::make_shared<DivisionOperator>(), childDerivative, childCopy);
+            } else {
+                throw std::logic_error("Unsupported unary function type");
+            }
+        } else {
+            throw std::logic_error("Unsupported arity of function. Only unary are supported yet");
+        }
     } else {
-        throw std::logic_error("Unsupported toke type");
+        throw std::logic_error("Unsupported token type");
     }
 }

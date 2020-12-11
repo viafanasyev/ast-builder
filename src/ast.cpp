@@ -101,6 +101,20 @@ void ASTNode::dotPrint(FILE* dotFile, int& nodeId) const {
             children[i]->dotPrint(dotFile, childrenNodeId);
         }
         nodeId = childrenNodeId;
+    } else if (token->getType() == TokenType::FUNCTION) {
+        auto functionToken = dynamic_cast<FunctionToken*>(token.get());
+        if (functionToken->getArity() == 1) {
+            fprintf(dotFile, "%d [label=\"unary func\nfunc: %s\", shape=box, style=filled, color=\"grey\", fillcolor=\"#C9E7FF\"];\n",
+                    nodeId, functionToken->getName());
+        } else {
+            throw std::logic_error("Unsupported arity of function. Only unary are supported yet");
+        }
+        int childrenNodeId = nodeId + 1;
+        for (size_t i = 0; i < childrenNumber; ++i) {
+            fprintf(dotFile, "%d->%d\n", nodeId, childrenNodeId);
+            children[i]->dotPrint(dotFile, childrenNodeId);
+        }
+        nodeId = childrenNodeId;
     } else {
         throw std::logic_error("Unsupported token type");
     }
@@ -142,6 +156,16 @@ void ASTNode::texPrint(FILE* texFile, TexBraceType braceType) const {
                 rightChild->texPrint(texFile, rightChildBrace);
                 if (braceType != NONE) fprintf(texFile, braceType == ROUND ? ")" : "}");
             }
+        } else {
+            throw std::logic_error("Unsupported arity of operator. Only unary and binary are supported yet");
+        }
+    } else if (token->getType() == TokenType::FUNCTION) {
+        auto functionToken = dynamic_cast<FunctionToken*>(token.get());
+        if (functionToken->getArity() == 1) {
+            fprintf(texFile, "{%s}", functionToken->getName());
+            children[0]->texPrint(texFile, ROUND);
+        } else {
+            throw std::logic_error("Unsupported arity of function. Only unary are supported yet");
         }
     } else {
         throw std::logic_error("Unsupported token type");

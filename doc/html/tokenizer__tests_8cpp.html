@@ -89,6 +89,8 @@ Macros</h2></td></tr>
 <tr class="separator:ac94273fce2fc3812c35aa04c0e5e4c92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ae97166b3a4846e44ca07a4d0ae465e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>ASSERT_OPERATOR_TOKEN</b>(token,  arity,  precedence,  operatorType)</td></tr>
 <tr class="separator:a8ae97166b3a4846e44ca07a4d0ae465e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8315390b386033b4368fad99864055cd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>ASSERT_VARIABLE_TOKEN</b>(token,  name)</td></tr>
+<tr class="separator:a8315390b386033b4368fad99864055cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -116,6 +118,12 @@ Functions</h2></td></tr>
 <tr class="memitem:afa78f98a871f541d4910721d424518b4"><td class="memItemLeft" align="right" valign="top"><a id="afa78f98a871f541d4910721d424518b4"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>TEST</b> (<a class="el" href="tokenizer_8h.html#aa44bc325151c00cf105f6c5e09feb7b3">tokenize</a>, invalidConstant)</td></tr>
 <tr class="separator:afa78f98a871f541d4910721d424518b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a939f3f00025b399387d589802939813a"><td class="memItemLeft" align="right" valign="top"><a id="a939f3f00025b399387d589802939813a"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TEST</b> (<a class="el" href="tokenizer_8h.html#aa44bc325151c00cf105f6c5e09feb7b3">tokenize</a>, simpleExpressionWithVariables)</td></tr>
+<tr class="separator:a939f3f00025b399387d589802939813a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa73de06f16b9bf8437df3cb689af227a"><td class="memItemLeft" align="right" valign="top"><a id="aa73de06f16b9bf8437df3cb689af227a"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TEST</b> (<a class="el" href="tokenizer_8h.html#aa44bc325151c00cf105f6c5e09feb7b3">tokenize</a>, simpleExpressionWithMultiplePowerOperations)</td></tr>
+<tr class="separator:aa73de06f16b9bf8437df3cb689af227a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Tests for tokenizer functions. </p>
@@ -232,17 +240,53 @@ Functions</h2></td></tr>
 <b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                                     \</div>
 <div class="line">    ASSERT_NOT_NULL(token);                                                                                            \</div>
 <div class="line">    ASSERT_EQUALS(token-&gt;getType(), PARENTHESIS);                                                                      \</div>
-<div class="line">    auto operatorToken = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="class_parenthesis_token.html">ParenthesisToken</a>*<span class="keyword">&gt;</span>(token.get());                                                 \</div>
-<div class="line">    ASSERT_NOT_NULL(operatorToken);                                                                                    \</div>
-<div class="line">    ASSERT_EQUALS(operatorToken-&gt;isOpen(), open);                                                                      \</div>
+<div class="line">    auto parenthesisToken = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="class_parenthesis_token.html">ParenthesisToken</a>*<span class="keyword">&gt;</span>(token.get());                                              \</div>
+<div class="line">    ASSERT_NOT_NULL(parenthesisToken);                                                                                 \</div>
+<div class="line">    ASSERT_EQUALS(parenthesisToken-&gt;isOpen(), open);                                                                   \</div>
+<div class="line">} <span class="keywordflow">while</span>(0)</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a8315390b386033b4368fad99864055cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8315390b386033b4368fad99864055cd">&#9670;&nbsp;</a></span>ASSERT_VARIABLE_TOKEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ASSERT_VARIABLE_TOKEN</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">token, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">name&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                                        \</div>
+<div class="line">    ASSERT_NOT_NULL(token);                                                                                            \</div>
+<div class="line">    ASSERT_EQUALS(token-&gt;getType(), VARIABLE);                                                                         \</div>
+<div class="line">    auto variableToken = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="class_variable_token.html">VariableToken</a>*<span class="keyword">&gt;</span>(token.get());                                                    \</div>
+<div class="line">    ASSERT_NOT_NULL(variableToken);                                                                                    \</div>
+<div class="line">    ASSERT_TRUE(strcmp(variableToken-&gt;getName(), name) == 0);                                                          \</div>
 <div class="line">} <span class="keywordflow">while</span>(0)</div>
 </div><!-- fragment -->
 </div>
 </div>
 </div><!-- contents -->
-<div class="ttc" id="aclass_parenthesis_token_html"><div class="ttname"><a href="class_parenthesis_token.html">ParenthesisToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:60</div></div>
-<div class="ttc" id="aclass_constant_value_token_html"><div class="ttname"><a href="class_constant_value_token.html">ConstantValueToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:43</div></div>
-<div class="ttc" id="aclass_operator_token_html"><div class="ttname"><a href="class_operator_token.html">OperatorToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:99</div></div>
+<div class="ttc" id="aclass_parenthesis_token_html"><div class="ttname"><a href="class_parenthesis_token.html">ParenthesisToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:66</div></div>
+<div class="ttc" id="aclass_variable_token_html"><div class="ttname"><a href="class_variable_token.html">VariableToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:228</div></div>
+<div class="ttc" id="aclass_constant_value_token_html"><div class="ttname"><a href="class_constant_value_token.html">ConstantValueToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:49</div></div>
+<div class="ttc" id="aclass_operator_token_html"><div class="ttname"><a href="class_operator_token.html">OperatorToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:107</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">
